@@ -18,15 +18,11 @@ class FormContainer extends Component {
     return(  
       <div>
         <div className='form__container'> 
-          <div className='form__container--switch'>
-            <Link to='/login'>Login</Link>
-            <Link to='/register'>Register</Link>
-          </div>
-        </div>
           <Switch>
             <Route exact path='/login' component={Login}/>
             <Route exact path='/register' component={Register}/>
           </Switch>
+        </div>
       </div>
     )
   }

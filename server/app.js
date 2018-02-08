@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const mongodb = require('mongodb');
 const mongoose = require('mongoose');
-const cors = require('cors')
+const cors = require('cors');
+
 mongoose.Promise = global.Promise;
 
 const User = require('../model/user-model');
@@ -12,14 +13,19 @@ const User = require('../model/user-model');
 const db = mongoose.connection;
 const port = 5000;
 
+//connect to mongodb
+
 mongoose.connect('mongodb://localhost:27017/react_express');
 db.once('open', () => console.log('mongo running')).on('error', console.error.bind(console, 'connection error:'));
 
+//apply express middleware
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(logger('dev'));
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: true}));
 
+//get users handler
 app.get('/users', (req,res) => {
   User.model.find({}).exec(function(err, users) {
     if (err) throw err;
@@ -27,6 +33,8 @@ app.get('/users', (req,res) => {
   })
 
 });
+
+//post users handler
 
 app.post('/users', cors(), (req, res, next) => {
   let user = new User.model(req.body);

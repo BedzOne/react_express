@@ -8,13 +8,21 @@ const Nav = styled.nav`
 `;
 
 class Navbar extends Component {
+  constructor(props) {
+    super(props);
+  }
 
   render() {
-    return(
+    return(  
         <Nav>
           <h2>Navbar</h2>
           <ul>
-              <Link to='/register'>Register</Link>
+            {this.props.isRegistered ? 
+              <li><Link to='/dashboard'>Dashboard</Link></li>
+            : null}
+            <li><Link to='/home'>Home</Link></li>
+            <li><Link to='/register'>Register</Link></li>
+            <li><Link to='/login'>Login</Link></li>
           </ul>
         </Nav>
     )

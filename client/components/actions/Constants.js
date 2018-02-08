@@ -1,1 +1,0 @@
-export const TYPE_USERNAME = "TYPE_USERNAME";

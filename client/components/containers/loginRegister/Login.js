@@ -11,26 +11,12 @@ class Login extends Component {
     }
 
     this.handleOnChange = this.handleOnChange.bind(this);
-    this.onSignUp = this.onSignUp.bind(this);
+    this.onLogin = this.onLogin.bind(this);
   }
 
-  onSignUp(e) {
+  onLogin(e) {
     e.preventDefault();
-    console.log(this.state)
-
-    const url = 'http://localhost:5000/users';
-    const data = this.state;
-
-    axios({
-      method: 'POST',
-      url: 'http://localhost:5000/users',
-      data: this.state,
-      responseType: 'json',
-      headers: { "Content-Type": "application/json" }
-    }).then((response) => {
-        console.log(JSON.stringify(response));
-      })
-      .catch(err => console.log(err))
+    console.log(this.state);
   }
 
   handleOnChange(e) {

@@ -6,12 +6,12 @@ import { Provider } from 'react-redux';
 import App from './components/App';
 import RegisterReducer from './reducers/RegisterReducer';
 
-let store = createStore(RegisterReducer);
-console.log(store.getState());
+// let store = createStore(RegisterReducer);
+// console.log(store.getState());
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App/>
-  </Provider>
-  , document.getElementById('root')
+  // <Provider store={store}>
+    <App/>, document.getElementById('root')
+  // </Provider>
+  
 )

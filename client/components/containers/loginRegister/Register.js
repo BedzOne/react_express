@@ -10,7 +10,6 @@ class Register extends Component {
       email: '',
       password: '',
       confirmPassword: '',
-      isRegistered: false,
       isLoggedIn: false
     }
 
@@ -18,26 +17,27 @@ class Register extends Component {
     this.onSignUp = this.onSignUp.bind(this);
   }
 
-  onSignUp(e) {
+  onSignUp(e, values) {
     e.preventDefault();
-    console.log(this.state)
 
     const url = 'http://localhost:5000/users'; 
     const data = this.state;
 
     axios({
       method: 'POST',
-      url: 'http://localhost:5000/users',
-      data: this.state,
+      url: url,
+      data: data,
       responseType: 'json',
       headers: { "Content-Type": "application/json" }
     }).then((response) => {
         console.log(JSON.stringify(response));
-        this.setState({isRegistered: true}, () => {
+        this.setState({isRegistered: !this.props.isRegistered}, () => {
           console.log(this.state)
         })
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
+
+      this.props.userRegistered();
   }
 
   handleOnChange(e) {
@@ -65,7 +65,7 @@ class Register extends Component {
           <input onChange={this.handleOnChange} id='password' name='password' type='password' />
 
           <label htmlFor='confirmPassword'>Confirm Password</label>
-          <input onChange={this.handleOnChange} id='confirmPassword' name='confirmPassword' type='confirmPassword' />
+          <input onChange={this.handleOnChange} id='confirmPassword' name='confirmPassword' type='password' />
 
           <input type='submit' value='Register' />
         </form>
