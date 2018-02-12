@@ -21,13 +21,14 @@ class Navbar extends Component {
               <li><Link to='/dashboard'>Dashboard</Link></li>
             : null}
             <li><Link to='/home'>Home</Link></li>
-            <li><Link to='/register'>Register</Link></li>
+            {!this.props.isRegistered ? 
+              <li><Link to='/register'>Register</Link></li>
+            : null}
             <li><Link to='/login'>Login</Link></li>
           </ul>
         </Nav>
     )
   }
-
 }
 
 export default Navbar;

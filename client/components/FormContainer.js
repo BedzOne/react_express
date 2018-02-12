@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
-import { Switch, Route, Link} from 'react-router-dom';
-import { Router } from 'react-router-dom';
-import { useRouterHistory } from 'react-router';
-import createBrowserHistory from 'history/createBrowserHistory';
+import { Switch, Route } from 'react-router-dom';
 
-const history = createBrowserHistory();
-
-import Register from '../containers/loginRegister/Register';
-import Login from '../containers/loginregister/Login';
+import Register from '../containers/Register';
+import Login from '../containers/Login';
 
 class FormContainer extends Component {
   constructor() {

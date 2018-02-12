@@ -19,6 +19,7 @@ module.exports = {
     hot: true,
     historyApiFallback: true,
   },
+  devtool: 'eval-source-map',
   module: {
     rules: [
       {
@@ -57,7 +58,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       hash: true,
-      title: "Andrew Bedziak | Portfolio",
+      title: "React_Express",
       template: "./client/index.html",
       filename: './index.html'
     }),

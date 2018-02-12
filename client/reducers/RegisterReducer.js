@@ -1,17 +1,17 @@
 const initialState = {
   isRegistered: false
-}
+};
 
-export default function reducer(state = initialState, action) {
+const registerReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "REGISTERED_SUCCESS": {
-      return {...state, isRegistered: true }
-    }
+    case "REGISTER_SUCCESS":  
+    return {...state, isRegistered: action.payload }
 
-    case "REGISTERED_FAIL": {
-      return {...state, isRegistered: false }
+    case "REGISTER_FAIL": {
+      return {...state, isRegistered: action.payload }
     }
   }
-
   return state;
 }
+
+export default registerReducer;

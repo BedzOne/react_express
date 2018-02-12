@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux'
+
 
 class Register extends Component {
   constructor(props) {
@@ -11,16 +13,23 @@ class Register extends Component {
       password: '',
       confirmPassword: '',
       isLoggedIn: false
-    }
+    };
 
     this.handleOnChange = this.handleOnChange.bind(this);
     this.onSignUp = this.onSignUp.bind(this);
   }
 
+  // componentWillUnmount() {
+  //   // this.props.registerSuccess();
+  //   if (this.props.register.isRegistered) {
+  //     this.onSignUp();
+  //   }
+  // }
+
   onSignUp(e, values) {
     e.preventDefault();
 
-    const url = 'http://localhost:5000/users'; 
+    const url = 'http://localhost:5000/register'; 
     const data = this.state;
 
     axios({
@@ -30,14 +39,9 @@ class Register extends Component {
       responseType: 'json',
       headers: { "Content-Type": "application/json" }
     }).then((response) => {
-        console.log(JSON.stringify(response));
-        this.setState({isRegistered: !this.props.isRegistered}, () => {
-          console.log(this.state)
-        })
+        this.props.registerSuccess();
       })
       .catch(err => console.log(err));
-
-      this.props.userRegistered();
   }
 
   handleOnChange(e) {
@@ -72,7 +76,24 @@ class Register extends Component {
       </div>
     )
   }
-
 }
 
-export default Register;
+const mapStateToProps = (state) => {
+  return {
+    register: state.registerReducer
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    registerSuccess: (isRegistered) => {
+      dispatch({
+        type: "REGISTER_SUCCESS",
+        payload: true
+      })
+    }
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
+

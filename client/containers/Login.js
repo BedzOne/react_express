@@ -8,7 +8,7 @@ class Login extends Component {
     this.state = {
       userName: '',
       password: '',
-    }
+    };
 
     this.handleOnChange = this.handleOnChange.bind(this);
     this.onLogin = this.onLogin.bind(this);
