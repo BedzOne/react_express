@@ -17,31 +17,31 @@ class Navbar extends Component {
 
   logoutUser() {
     this.props.logOut();
+    localStorage.clear();
+  }
+
+  navLinks() {
+    if (this.props.isLoggedIn) {
+      return [
+        <li><Link to='/dashboard'>Dashboard</Link></li>,
+        <li><Link onClick={this.logoutUser} to='/home'>Logout</Link></li>
+      ]
+    }
+    return [
+      <li><Link to='/register'>Register</Link></li>,
+      <li><Link to='/login'>Login</Link></li>
+    ]
   }
 
   render() {
     return(  
-        <Nav>
-          <h2>Navbar</h2>
-          <ul>
-            <li><Link to='/home'>Home</Link></li>
-            {this.props.isLoggedIn ? 
-              <li><Link to='/dashboard'>Dashboard</Link></li>
-            : null}
-
-            {this.props.isLoggedIn ? 
-              <li><Link onClick={this.logoutUser} to='/home'>Logout</Link></li>
-            : null}
-            
-            {!this.props.isLoggedIn ? 
-              <li><Link to='/register'>Register</Link></li>
-            : null}
-
-            {!this.props.isLoggedIn ? 
-              <li><Link to='/login'>Login</Link></li>
-            : null}
-          </ul>
-        </Nav>
+      <Nav>
+        <h2>Navbar</h2>
+        <ul>
+          <li><Link to='/home'>Home</Link></li>
+          {this.navLinks()}
+        </ul>
+      </Nav>
     )
   }
 }
