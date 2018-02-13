@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { connect } from 'react-redux'
-
+import { connect } from 'react-redux';
 
 class Register extends Component {
   constructor(props) {
@@ -19,17 +18,10 @@ class Register extends Component {
     this.onSignUp = this.onSignUp.bind(this);
   }
 
-  // componentWillUnmount() {
-  //   // this.props.registerSuccess();
-  //   if (this.props.register.isRegistered) {
-  //     this.onSignUp();
-  //   }
-  // }
-
   onSignUp(e, values) {
     e.preventDefault();
 
-    const url = 'http://localhost:5000/register'; 
+    const url = 'http://localhost:5000/user/register'; 
     const data = this.state;
 
     axios({

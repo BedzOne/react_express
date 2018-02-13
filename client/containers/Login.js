@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import {withRouter} from "react-router-dom";
 
 class Login extends Component {
   constructor(props) {
@@ -7,7 +9,7 @@ class Login extends Component {
 
     this.state = {
       userName: '',
-      password: '',
+      password: ''
     };
 
     this.handleOnChange = this.handleOnChange.bind(this);
@@ -17,6 +19,18 @@ class Login extends Component {
   onLogin(e) {
     e.preventDefault();
     console.log(this.state);
+    const url = 'http://localhost:5000/user/login'; 
+    axios({
+      method: 'POST',
+      url: url,
+      data: this.state,
+    }).then(response => {
+      console.log(response);
+      this.props.loginSuccess();
+      localStorage.setItem('token', response.data.token);
+      this.props.history.push('/home');
+    });
+
   }
 
   handleOnChange(e) {
@@ -47,4 +61,21 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {
+    login: state.loginReducer
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginSuccess: (isLoggedIn) => {
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: true
+      })
+    }
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));

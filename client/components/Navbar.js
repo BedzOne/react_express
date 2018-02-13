@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Router, Link } from 'react-router-dom';
+import {withRouter} from "react-router-dom";
 import styled from 'styled-components';
 
 const Nav = styled.nav`
@@ -10,6 +11,12 @@ const Nav = styled.nav`
 class Navbar extends Component {
   constructor(props) {
     super(props);
+
+    this.logoutUser = this.logoutUser.bind(this);
+  }
+
+  logoutUser() {
+    this.props.logOut();
   }
 
   render() {
@@ -17,18 +24,26 @@ class Navbar extends Component {
         <Nav>
           <h2>Navbar</h2>
           <ul>
-            {this.props.isRegistered ? 
+            <li><Link to='/home'>Home</Link></li>
+            {this.props.isLoggedIn ? 
               <li><Link to='/dashboard'>Dashboard</Link></li>
             : null}
-            <li><Link to='/home'>Home</Link></li>
-            {!this.props.isRegistered ? 
+
+            {this.props.isLoggedIn ? 
+              <li><Link onClick={this.logoutUser} to='/home'>Logout</Link></li>
+            : null}
+            
+            {!this.props.isLoggedIn ? 
               <li><Link to='/register'>Register</Link></li>
             : null}
-            <li><Link to='/login'>Login</Link></li>
+
+            {!this.props.isLoggedIn ? 
+              <li><Link to='/login'>Login</Link></li>
+            : null}
           </ul>
         </Nav>
     )
   }
 }
 
-export default Navbar;
+export default withRouter(Navbar);

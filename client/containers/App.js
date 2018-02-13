@@ -12,7 +12,8 @@ import Navbar from '../components/Navbar';
 import Home from '../components/Home';
 import Dashboard from '../components/Dashboard';
 import Login from './Login';
-import { registerSuccess } from '../actions/registerActions';
+import { registerSuccess } from '../actions/register';
+import { loginSuccess } from '../actions/login';
 
 import '../App.scss';
 
@@ -25,7 +26,7 @@ class App extends Component {
     return(
       <Router history={history}>
         <div>
-          <Navbar isRegistered={this.props.register.isRegistered}/> 
+          <Navbar isLoggedIn={this.props.login.isLoggedIn} logOut={this.props.logOut}/> 
           <Switch>
             <Route exact path='/home' component={Home}/>
             <Route exact path='/login' render={() => <Login />}/>
@@ -46,8 +47,20 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    register: state.registerReducer
+    register: state.registerReducer,
+    login: state.loginReducer
   };
 }
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logOut: (isLoggedIn) => {
+      dispatch({
+        type: "LOG_OUT",
+        payload: false
+      })
+    }
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
