@@ -39,7 +39,13 @@ class Navbar extends Component {
         <h2>Navbar</h2>
         <ul>
           <li><Link to='/home'>Home</Link></li>
+          <li>Products
+            {/* <ul>
+              <li><Link to='/shoes'>Home</Link></li>
+            </ul> */}
+          </li>
           {this.navLinks()}
+          
         </ul>
       </Nav>
     )

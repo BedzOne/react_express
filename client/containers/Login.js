@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
+
+import { loginSuccess } from '../actions/login';
 
 class Login extends Component {
   constructor(props) {
@@ -18,19 +20,18 @@ class Login extends Component {
 
   onLogin(e) {
     e.preventDefault();
-    console.log(this.state);
     const url = 'http://localhost:5000/user/login'; 
     axios({
       method: 'POST',
       url: url,
       data: this.state,
-    }).then(response => {
-      console.log(response);
+    })
+    .then(response => {
       this.props.loginSuccess();
       localStorage.setItem('token', response.data.token);
-      this.props.history.push('/dashboard');
-    });
-
+      this.props.history.push('/home');
+    })
+    .catch(err => console.log(err));
   }
 
   handleOnChange(e) {
@@ -40,7 +41,7 @@ class Login extends Component {
 
     this.setState({
       [name]: value
-    })
+    });
   }
  
   render() {
@@ -70,10 +71,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     loginSuccess: (isLoggedIn) => {
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: true
-      })
+      dispatch(loginSuccess(true))
     }
   }
 }

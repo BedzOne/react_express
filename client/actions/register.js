@@ -1,15 +1,15 @@
 import { REGISTER_SUCCESS, REGISTER_FAIL } from './constants';
 
-export function registerSuccess() {
+export function registerSuccess(reg) {
   return {
     type: REGISTER_SUCCESS, 
-    payload: true
+    payload: reg
   };
 }
 
-export function registerFail() {
+export function registerFail(reg) {
   return {
     type: REGISTER_FAIL,
-    payload: false
+    payload: reg
   };
 }

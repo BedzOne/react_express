@@ -12,7 +12,6 @@ export default function(ComposedComponent) {
       if (this.props.login.isLoggedIn) {
         this.props.history.push('/login');
       } 
-      // console.log()
     }
 
     componentWillUpdate(nextProps) {
@@ -20,8 +19,6 @@ export default function(ComposedComponent) {
         this.props.history.push('/login');
       } 
     }
-
-    // return withRouter(connect(mapStateToProps)(Auth));
   }
 }
 

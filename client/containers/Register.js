@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 
+import { registerSuccess } from '../actions/register';
+
 class Register extends Component {
   constructor(props) {
     super(props);
@@ -79,10 +81,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     registerSuccess: (isRegistered) => {
-      dispatch({
-        type: "REGISTER_SUCCESS",
-        payload: true
-      })
+      dispatch(registerSuccess(true))
     }
   }
 };
