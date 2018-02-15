@@ -5,6 +5,8 @@ const logger = require('morgan');
 const cors = require('cors');
 
 const users = require('./routes/users');
+const products = require('./routes/products');
+
 const db = require('./config');
 const port = 5000;
 
@@ -19,6 +21,7 @@ app.use((req, res, next) => {
 //apply express middleware
 
 app.use(bodyParser.json());
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(logger('dev'));
 app.use(cors());
@@ -26,5 +29,6 @@ app.use(cors());
 //routes
 
 app.use('/user', users);
+app.use('/product', products);
 
 app.listen(port, () => console.log(`server running on port ${port}...`));
