@@ -64,7 +64,7 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new CopyWebpackPlugin([
-      {from:'client/assets/images', to:'./assets/images'} 
+      {from:'uploads/', to:'./assets/images'} 
     ]), 
   ],
 };
