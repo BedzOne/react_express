@@ -1,11 +1,23 @@
 import React, { Component } from 'react';
-import { Router, Link } from 'react-router-dom';
-import {withRouter} from "react-router-dom";
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Nav = styled.nav`
   display: flex;
   width: 100%;  
+  border-bottom: 0.01em solid black;
+  justify-content: space-between;
+`;
+
+const NavList = styled.ul`
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin-right: 1em;
+`;
+
+const NavListItem = styled.li`
+  margin-left: 1em;
 `;
 
 class Navbar extends Component {
@@ -23,13 +35,14 @@ class Navbar extends Component {
   navLinks() {
     if (this.props.isLoggedIn) {
       return [
-        <li><Link to='/dashboard'>Dashboard</Link></li>,
-        <li><Link onClick={this.logoutUser} to='/home'>Logout</Link></li>
+        <NavListItem key='3'><Link to='/cart'>Cart</Link></NavListItem>,
+        <NavListItem key='4'><Link to='/dashboard/profile'>Dashboard</Link></NavListItem>,
+        <NavListItem key='5'><Link onClick={this.logoutUser} to='/home'>Logout</Link></NavListItem>
       ]
     }
     return [
-      <li><Link to='/register'>Register</Link></li>,
-      <li><Link to='/login'>Login</Link></li>
+      <NavListItem key='6'><Link to='/register'>Register</Link></NavListItem>,
+      <NavListItem key='7'><Link to='/login'>Login</Link></NavListItem>
     ]
   }
 
@@ -37,19 +50,14 @@ class Navbar extends Component {
     return(  
       <Nav>
         <h2>Navbar</h2>
-        <ul>
-          <li><Link to='/home'>Home</Link></li>
-          <li>Products
-            {/* <ul>
-              <li><Link to='/shoes'>Home</Link></li>
-            </ul> */}
-          </li>
+        <NavList>
+          <NavListItem key='1'><Link to='/home'>Home</Link></NavListItem>
+          <NavListItem key='2'>Products</NavListItem>
           {this.navLinks()}
-          
-        </ul>
+        </NavList>
       </Nav>
     )
   }
 }
 
-export default withRouter(Navbar);
+export default Navbar;

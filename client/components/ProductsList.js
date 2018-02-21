@@ -1,37 +1,84 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-import ProductButton from './ProductButton';
+import AddToCartButton from './AddToCartButton';
+import ProductDetailsButton from './ProductDetailsButton';
+
+const ProductsContainer = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  list-style: none;
+`;
+
+const ProductsLi = styled.li`
+${'' /* display: flex; */}
+  width: calc((100% / 3) - 4em);
+  height: 15em;
+  margin-left: 2em;
+  margin-right: 1em;
+  margin-bottom: 3em;
+  padding: 0.5em;
+  ${'' /* border: 0.05em solid grey; */}
+`;
+
+const ProductImg = styled.img`
+  width: 100%;
+  height: 80%;
+`;
+
+const Header = styled.h2`
+  text-align: center;
+`;
+
+const FigCaption = styled.figcaption`
+  width: 100%;
+  ${'' /* height: 20%; */}
+  padding: 1em;
+  border-top: 0.01em solid grey;
+`;
+
+const Figure = styled.figure`
+  width: 100%;
+  ${'' /* height: 100%; */}
+  padding: 0.5em;
+  margin:0;
+  margin-bottom: 2em;
+  
+`;
+
+const url = 'http://localhost:5000/';
 
 class ProductsList extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+  }
+
+  componentWillMount() {
+    this.props.getProducts(); 
   }
 
   render() {
     let productsList;
     productsList = this.props.productsList.map((product, index) => {
       return(
-        <li key={index}>
-          <div>
-            <figure>
-              <img src='' alt='product image' />
-              <figcaption>
-                <p>{product.desc}</p>
-              </figcaption>
-            </figure>
-            <div>
-              <span>{product.name}</span>
-              <span>{product.price}</span>
-            </div>
-            <ProductButton />
-          </div>
-        </li>
+        <ProductsLi key={product._id}>
+              <ProductImg src={`${url}${product.productImage}`} alt='product image' />
+                <span>{product.name}</span>
+                <span>{product.price}</span>
+                <div>
+                  <Link to={`/product/${product._id}`}>See details</Link>
+                  <AddToCartButton addItemToCart={this.props.addItemToCart} product={product}/>
+                </div>   
+        </ProductsLi>
       )
     })
     return(
       <div>
-        <h2>Products</h2>
-        <ul>{productsList}</ul>
+        <Header>Products</Header>
+        <ProductsContainer>{productsList}</ProductsContainer>
       </div>
     )
   }

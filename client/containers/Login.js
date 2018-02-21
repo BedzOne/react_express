@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
-
-import { loginSuccess } from '../actions/login';
 
 class Login extends Component {
   constructor(props) {
@@ -26,15 +23,20 @@ class Login extends Component {
       url: url,
       data: this.state,
     })
-    .then(response => {
-      this.props.loginSuccess();
-      localStorage.setItem('token', response.data.token);
+    .then(res => {
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.users[0]));
+      const loggedUser = localStorage.getItem('user');
+      const userState = JSON.parse(loggedUser);
+      this.props.loginSuccess(true);
+      this.props.updateUser(userState);
       this.props.history.push('/home');
     })
     .catch(err => console.log(err));
   }
 
   handleOnChange(e) {
+    e.preventDefault();
     const target = e.target;
     const value = target.value;
     const name = target.name;
@@ -50,7 +52,7 @@ class Login extends Component {
         <h2>Please Log in</h2>
         <form onSubmit={this.onLogin}>
           <label htmlFor='userName'>Name</label>
-          <input onInput={this.handleOnChange} id='userName' name='userName' type='userName' /> 
+          <input onInput={this.handleOnChange} id='userName' name='userName' type='text' /> 
 
           <label htmlFor='password'>Password</label>
           <input onChange={this.handleOnChange} id='password' name='password' type='password' />
@@ -62,18 +64,4 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    login: state.loginReducer
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loginSuccess: (isLoggedIn) => {
-      dispatch(loginSuccess(true))
-    }
-  }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
+export default withRouter(Login);

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { connect } from 'react-redux';
-
-import { registerSuccess } from '../actions/register';
+import { withRouter } from 'react-router-dom';
 
 class Register extends Component {
   constructor(props) {
@@ -20,9 +18,8 @@ class Register extends Component {
     this.onSignUp = this.onSignUp.bind(this);
   }
 
-  onSignUp(e, values) {
+  onSignUp(e) {
     e.preventDefault();
-
     const url = 'http://localhost:5000/user/register'; 
     const data = this.state;
 
@@ -32,8 +29,9 @@ class Register extends Component {
       data: data,
       responseType: 'json',
       headers: { "Content-Type": "application/json" }
-    }).then((response) => {
-        this.props.registerSuccess();
+    }).then((res) => {
+        this.props.registerSuccess(true);
+        this.props.history.push('/login');
       })
       .catch(err => console.log(err));
   }
@@ -54,7 +52,7 @@ class Register extends Component {
       <h2>Please register</h2>
         <form onSubmit={this.onSignUp}>
           <label htmlFor='userName'>Name</label>
-          <input onInput={this.handleOnChange} id='userName' name='userName' type='userName' />
+          <input onInput={this.handleOnChange} id='userName' name='userName' type='text' />
 
           <label htmlFor='email'>E-mail</label>
           <input onChange={this.handleOnChange} id='email' name='email' type='email' />
@@ -72,19 +70,5 @@ class Register extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    register: state.registerReducer
-  };
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    registerSuccess: (isRegistered) => {
-      dispatch(registerSuccess(true))
-    }
-  }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default withRouter(Register);
 
