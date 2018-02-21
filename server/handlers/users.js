@@ -35,16 +35,19 @@ exports.getUsers = (req, res) => {
 };
 
 exports.updateUser = (req, res) => {
-  let newUser = {
-    userName: req.body.userName
-  };
+  let newUser = req.body;
 
   User.model
     .findByIdAndUpdate(req.params.userId, newUser, {new: true})
-    .exec(function(err, doc) {
-      if (err) return res.send(500, { error: err });
-      return res.send(doc);
-    });
+    .exec()
+    .then(user => {
+      user.save(function (err, user) {
+        if (err) return (err);
+      });
+      console.log('user updated');
+      res.json(newUser);
+    })
+    .catch(err => res.send(500, { error: err }))
 };
 
 exports.deleteUser = (req, res) => {
@@ -79,11 +82,22 @@ exports.loginUser = (req, res) => {
                   'secretKey', { expiresIn: "1h"});
               res.status(200).json({
                 message: "Auth success",
-                token
+                token,
+                users
               });
             } 
           })
-          .catch(err => res.status(401).json({message: "Auth failed"}))
+          .catch(err => res.status(401).json({message: "Auth failed"}));
         }     
       });
 };
+
+exports.getUser = (req, res) => {
+  User.model  
+    .findById(req.params.id)
+    .exec()
+    .then(user => {
+      res.json(user);
+    })
+    .catch(err => res.sendStatus(404));
+}

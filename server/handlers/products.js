@@ -1,17 +1,21 @@
 const Product = require('../models/productModel');
-// const multer = require('multer');
 
 exports.uploadProduct = (req, res) => {
   const product = new Product.model({
     name: req.body.name,
     price: req.body.price,
     desc: req.body.desc,
-    productModel: req.file.path
+    category: req.body.desc,
+    tag: req.body.tag,
+    size: req.body.size,
+    productImage: req.file.path
   });
+
   product.save((err, product) => {
     if (err) res.sendStatus(404);
     res.sendStatus(200);
   });
+  
 };
 
 exports.getProducts = (req, res) => {
@@ -46,5 +50,15 @@ exports.updateProduct = (req, res) => {
     .exec((err, product) => {
       if (err) res.sendStatus(404);
       res.sendStatus(200);
+    });
+};
+
+exports.getSingleProduct = (req, res) => {
+  Product.model
+    .findById(req.params.id)
+    .exec()
+    .then(product => {
+      if (!product) return res.sendStatus(404);
+      return res.json(product);
     });
 };

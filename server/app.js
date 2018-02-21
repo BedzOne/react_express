@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const users = require('./routes/users');
 const products = require('./routes/products');
+const cartItems = require('./routes/cartItems');
 
 const db = require('./config');
 const port = 5000;
@@ -30,5 +31,6 @@ app.use(cors());
 
 app.use('/user', users);
 app.use('/product', products);
+app.use('/cart', cartItems);
 
 app.listen(port, () => console.log(`server running on port ${port}...`));

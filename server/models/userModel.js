@@ -9,6 +9,8 @@ userModel.schema = new Schema({
   email: {type: String, required: true},
   password: {type: String, required: true},
   confirmPassword: {type: String, required: true},
+  addressDelivery: {type: String},
+  addressBilling: {type: String}
 });
 
 userModel.schema.pre('save', function(next) {

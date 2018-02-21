@@ -10,6 +10,7 @@ router.delete('/:userId', checkAuth, user_handler.deleteUser);
 router.put('/:userId', checkAuth, user_handler.updateUser);
 
 router.post('/login', user_handler.loginUser);
+router.get('/:id', user_handler.getUser);
 
 module.exports = router;
 
