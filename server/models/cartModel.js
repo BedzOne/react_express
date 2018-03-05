@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const product = require('./productModel');
+const cart = {};
 
-const product = {};
-
-product.schema = new Schema({
+cart.schema = new Schema({
   name: {type: String},
   price: {type: Number},
   desc: {type: String},
@@ -11,10 +11,9 @@ product.schema = new Schema({
   tag: {type: String},
   size: {type: String},
   productImage: {type: String},
-  quantity: {type: Number}
+  quantity: {type: Number},
 });
 
-product.model = mongoose.model('Product', product.schema);
+cart.model = mongoose.model('Cart', cart.schema);
 
-module.exports = product;
-
+module.exports = cart;

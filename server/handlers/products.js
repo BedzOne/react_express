@@ -15,7 +15,6 @@ exports.uploadProduct = (req, res) => {
     if (err) res.sendStatus(404);
     res.sendStatus(200);
   });
-  
 };
 
 exports.getProducts = (req, res) => {

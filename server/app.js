@@ -6,12 +6,11 @@ const cors = require('cors');
 
 const users = require('./routes/users');
 const products = require('./routes/products');
-const cartItems = require('./routes/cartItems');
+const cart = require('./routes/cart');
+const order = require('./routes/order');
 
-const db = require('./config');
-const port = 5000;
-
-db.mongoConnect();
+const db = require('./config').mongoConnect();
+const port = process.env.PORT || 5000;
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
@@ -31,6 +30,7 @@ app.use(cors());
 
 app.use('/user', users);
 app.use('/product', products);
-app.use('/cart', cartItems);
+app.use('/cart', cart);
+app.use('/order', order);
 
 app.listen(port, () => console.log(`server running on port ${port}...`));

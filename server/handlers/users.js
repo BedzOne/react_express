@@ -6,28 +6,33 @@ const User = require('../models/userModel');
 
 exports.registerUser = (req, res) => {
   let user = new User.model(req.body);
-  if(user.userName) {
+  if(user.email) {
     User.model
-      .find({userName: user.userName})
+      .find({email: user.email})
       .exec()
-      .then(users => {
-        if (!users.length) { 
-          console.log('user saved');
+      .then(docs => {
+        if (!docs.length) { 
+          if (user.password !== user.confirmPassword) {
+            return res.status(404).json('passwords do not match');
+          }
           user.save(function (err, user) {
             if (err) return (err);
           });
-          res.sendStatus(200);
-        } 
-        return new Error('user exists'); 
+          console.log('user saved');
+          res.sendStatus(200); 
+        } else {
+          res.status(404).json('user exists');
+        }      
       })
-      .catch(err => res.sendStatus(404))
+      .catch(err => res.sendStatus(404).json(res.body));
+    } else {
+      res.status(404).json('user name required');
     }
-    console.log('user name required');
 };
 
 exports.getUsers = (req, res) => {
   User.model
-    .find({})
+    .find()
     .exec(function(err, users) {
       if (err) throw err;
       res.json(users);
@@ -52,19 +57,19 @@ exports.updateUser = (req, res) => {
 
 exports.deleteUser = (req, res) => {
   User.model
-      .findByIdAndRemove(req.params.userId)
-      .exec()
-      .then(users => {
-        if (!users) return res.sendStatus(404).end();
-        return res.sendStatus(200).end();
-      })
-      .catch(err => next(err))
+    .findByIdAndRemove(req.params.userId)
+    .exec()
+    .then(users => {
+      if (!users) return res.sendStatus(404).end();
+      return res.sendStatus(200).end();
+    })
+    .catch(err => next(err))
 };
 
 exports.loginUser = (req, res) => {
   let user = req.body;
     User.model
-      .find({userName: user.userName})
+      .find({email: user.email})
       .exec()
       .then(users => {
         if (!users.length) { 
@@ -78,7 +83,7 @@ exports.loginUser = (req, res) => {
             if (result) {
               const token = 
                 jwt
-                  .sign({ userName: users[0].userName, id: users[0]._id },
+                  .sign({ email: users[0].email, id: users[0]._id },
                   'secretKey', { expiresIn: "1h"});
               res.status(200).json({
                 message: "Auth success",
@@ -100,4 +105,4 @@ exports.getUser = (req, res) => {
       res.json(user);
     })
     .catch(err => res.sendStatus(404));
-}
+};
