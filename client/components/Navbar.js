@@ -27,9 +27,8 @@ class Navbar extends Component {
     this.logoutUser = this.logoutUser.bind(this);
   }
 
-  logoutUser() {
-    this.props.logOut();
-    localStorage.clear();
+  logoutUser(user) {
+    this.props.logOut(false, user);
   }
 
   navLinks() {

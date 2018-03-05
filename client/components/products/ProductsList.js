@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import AddToCartButton from './AddToCartButton';
-import ProductDetailsButton from './ProductDetailsButton';
 
 const ProductsContainer = styled.ul`
   display: flex;
@@ -46,7 +44,6 @@ const Figure = styled.figure`
   padding: 0.5em;
   margin:0;
   margin-bottom: 2em;
-  
 `;
 
 const url = 'http://localhost:5000/';
@@ -55,26 +52,22 @@ class ProductsList extends Component {
   constructor(props) {
     super(props);
   }
-
-  componentWillMount() {
-    this.props.getProducts(); 
-  }
-
+  
   render() {
     let productsList;
     productsList = this.props.productsList.map((product, index) => {
       return(
         <ProductsLi key={product._id}>
-              <ProductImg src={`${url}${product.productImage}`} alt='product image' />
-                <span>{product.name}</span>
-                <span>{product.price}</span>
-                <div>
-                  <Link to={`/product/${product._id}`}>See details</Link>
-                  <AddToCartButton addItemToCart={this.props.addItemToCart} product={product}/>
-                </div>   
+          <ProductImg src={`${url}${product.productImage}`} alt='product image' />
+            <span>{product.name}</span>
+            <span>{product.price}</span>
+            <div>
+              <Link to={`/product/${product._id}`}>See details</Link>
+            </div>   
         </ProductsLi>
       )
     })
+
     return(
       <div>
         <Header>Products</Header>

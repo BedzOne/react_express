@@ -3,21 +3,21 @@ import { LOGIN_SUCCESS, LOGIN_FAIL, LOG_OUT } from './constants';
 export function loginSuccess(login) {
   return {
     type: LOGIN_SUCCESS,
-    payload: login,
+    login,
   };
 }
 
-export function loginFail(log) {
+export function loginFail(logFail) {
   return {
     type: LOGIN_FAIL,
-    payload: log
+    logFail
   };
 }
 
-export function logOut(log, user) {
+export function logOut(logout, user) {
   return {
     type: LOG_OUT,
-    payload: log,
-    user: user
+    logout,
+    user
   };
 }

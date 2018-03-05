@@ -1,15 +1,15 @@
 import { combineReducers } from 'redux';
 
-import registerReducer from './registerReducer';
-import loginReducer from './loginReducer';
-import productsReducer from './products';
+import registerReducer from './register';
+import productsReducer from './product';
 import userReducer from './user';
-import cartReducer from './cartReducer';
+import cartReducer from './cart';
+import orderReducer from './order';
 
 export default combineReducers({
   registerReducer,
-  loginReducer,
   productsReducer,
   userReducer,
-  cartReducer
+  cartReducer,
+  orderReducer
 });

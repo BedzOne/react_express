@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Route } from 'react-router';
 import styled from 'styled-components';
 
-import SideBar from './dashboard/SideBar';
-import Profile from './dashboard/Profile';
-import Settings from './dashboard/Settings';
-import Payment from './dashboard/Payment';
-import Orders from './dashboard/Orders';
+import SideBar from './SideBar';
+import Profile from './Profile';
+import Settings from './Settings';
+import Payment from './Payment';
+import Orders from './Orders';
 
 const Container = styled.div`
   display: flex;
@@ -21,12 +21,13 @@ class Dashboard extends Component {
     return(
       <Container>
         <SideBar />
-        <Route exact path='/dashboard/profile' render={() => <Profile user={this.props.user}/>} />
-        <Route exact path='/dashboard/settings' render={() => <Settings logOut={this.props.logOut} user={this.props.user}/>} />
+        <Route exact path='/dashboard/profile' render={() => <Profile getUser={this.props.getUser} user={this.props.user}/>} />
+        <Route exact path='/dashboard/settings' render={() => <Settings logOut={this.props.logOut} user={this.props.user} updateUser={this.props.updateUser} changeAddress={this.props.changeAddress}/>} />
         <Route exact path='/dashboard/payment' render={() => <Payment />} />
         <Route exact path='/dashboard/myorders' render={() => <Orders />} />
       </Container>
     )
   }
 }
+
 export default Dashboard;

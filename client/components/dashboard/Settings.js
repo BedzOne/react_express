@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import axios from 'axios';
 import { withRouter } from "react-router-dom";
-
-import { updateUser, getUser } from '../../actions/user';
 
 class Settings extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      userName: this.props.user.userName,
+      firstName: this.props.user.firstName,
+      lastName: this.props.user.lastName,
       email: this.props.user.email,
       password: '',
       confirmPassword: '',
@@ -25,7 +23,7 @@ class Settings extends Component {
   handleSubmit(e) {
     e.preventDefault();
     let userLoggedIn = localStorage.getItem('token');
-
+    console.log(userLoggedIn)
     if (userLoggedIn) {
       axios({
         method: 'PUT',
@@ -34,6 +32,10 @@ class Settings extends Component {
         data: this.state
       })
       .then((res) => {
+        localStorage.setItem('user', JSON.stringify(res.data));
+        const updatedUser = localStorage.getItem('user');
+        const updatedUserState = JSON.parse(updatedUser);
+        this.props.updateUser(updatedUserState);
         this.props.logOut();
         localStorage.clear();
         this.props.history.push('/login');
@@ -59,8 +61,11 @@ class Settings extends Component {
       <div>
         <div>Settings</div>
         <form onSubmit={this.handleSubmit}>
-          <label htmlFor='userName'>Name</label>
-          <input onChange={this.handleOnChange}  value={this.state.userName} id='userName' name='userName' type='text' /> 
+          <label htmlFor='firstName'>First Name</label>
+          <input onChange={this.handleOnChange}  value={this.state.firstName} id='firstName' name='firstName' type='text' /> 
+
+          <label htmlFor='lastName'>Last Name</label>
+          <input onChange={this.handleOnChange}  value={this.state.lastName} id='lastName' name='lastName' type='text' /> 
 
           <label htmlFor='email'>Email</label>
           <input onChange={this.handleOnChange} value={this.state.email} id='email' name='email' type='email' required/> 

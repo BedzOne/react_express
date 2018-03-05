@@ -7,7 +7,8 @@ class Register extends Component {
     super(props);
 
     this.state = {
-      userName: '',
+      firstName: '',
+      lastName: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -20,13 +21,11 @@ class Register extends Component {
 
   onSignUp(e) {
     e.preventDefault();
-    const url = 'http://localhost:5000/user/register'; 
-    const data = this.state;
 
     axios({
       method: 'POST',
-      url: url,
-      data: data,
+      url: 'http://localhost:5000/user/register',
+      data: this.state,
       responseType: 'json',
       headers: { "Content-Type": "application/json" }
     }).then((res) => {
@@ -37,13 +36,12 @@ class Register extends Component {
   }
 
   handleOnChange(e) {
-    const target = e.target;
-    const value = target.value;
-    const name = target.name;
+    const value = e.target.value;
+    const name = e.target.name;
 
     this.setState({
       [name]: value
-    })
+    });
   }
  
   render() {
@@ -51,8 +49,11 @@ class Register extends Component {
       <div>
       <h2>Please register</h2>
         <form onSubmit={this.onSignUp}>
-          <label htmlFor='userName'>Name</label>
-          <input onInput={this.handleOnChange} id='userName' name='userName' type='text' />
+          <label htmlFor='firstName'>First Name</label>
+          <input onInput={this.handleOnChange} id='firstName' name='firstName' type='text' />
+
+          <label htmlFor='lastName'>Last Name</label>
+          <input onInput={this.handleOnChange} id='lastName' name='lastName' type='text' />
 
           <label htmlFor='email'>E-mail</label>
           <input onChange={this.handleOnChange} id='email' name='email' type='email' />

@@ -7,7 +7,7 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      userName: '',
+      email: '',
       password: ''
     };
 
@@ -17,19 +17,19 @@ class Login extends Component {
 
   onLogin(e) {
     e.preventDefault();
-    const url = 'http://localhost:5000/user/login'; 
     axios({
       method: 'POST',
-      url: url,
+      url: 'http://localhost:5000/user/login',
       data: this.state,
     })
     .then(res => {
+      console.log(res)
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.users[0]));
       const loggedUser = localStorage.getItem('user');
       const userState = JSON.parse(loggedUser);
       this.props.loginSuccess(true);
-      this.props.updateUser(userState);
+      this.props.getUser(userState);
       this.props.history.push('/home');
     })
     .catch(err => console.log(err));
@@ -37,9 +37,8 @@ class Login extends Component {
 
   handleOnChange(e) {
     e.preventDefault();
-    const target = e.target;
-    const value = target.value;
-    const name = target.name;
+    const value = e.target.value;
+    const name = e.target.name;
 
     this.setState({
       [name]: value
@@ -51,8 +50,8 @@ class Login extends Component {
       <div>
         <h2>Please Log in</h2>
         <form onSubmit={this.onLogin}>
-          <label htmlFor='userName'>Name</label>
-          <input onInput={this.handleOnChange} id='userName' name='userName' type='text' /> 
+          <label htmlFor='email'>E-mail</label>
+          <input onInput={this.handleOnChange} id='email' name='email' type='email' /> 
 
           <label htmlFor='password'>Password</label>
           <input onChange={this.handleOnChange} id='password' name='password' type='password' />

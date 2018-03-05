@@ -11,10 +11,16 @@ class Profile extends Component {
       <div>
         <h2>Profile</h2>
         <div>
-          <span>Name: </span><span>{this.props.user.userName}</span>
+          <span>First Name: </span><span>{this.props.user.firstName}</span>
+        </div>
+        <div>
+          <span>Last Name: </span><span>{this.props.user.lastName}</span>
         </div>
         <div>
           <span>Email: </span><span>{this.props.user.email}</span>
+        </div>
+        <div>
+          <span>Phone: </span><span>{this.props.user.telephone}</span>
         </div>
         <div>Addresses</div>
         <div>
