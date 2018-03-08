@@ -40,15 +40,13 @@ userModel.schema = new Schema({
 
 userModel.schema.pre('save', function(next) {
   let user = this;
-  bcrypt.hash(user.password, 10, function(err, hash) {
-    if (err) {
-      return next(err);
-    } else {
+  bcrypt.hash(user.password, 10)
+    .then(hash => {
       user.password = hash;
       user.confirmPassword = hash;
       next();
-    }
-  });
+    })
+    .catch(err => res.sendStatus(404));
 });
 
 userModel.model = mongoose.model('User', userModel.schema);
