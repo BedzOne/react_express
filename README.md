@@ -1,6 +1,6 @@
 # react_express
 
-This is my first fullstack app and first where I will implement Redux into React application
+Full-stack mock e-commerce website created with React and Express.
 
 Technologies:
 
@@ -8,8 +8,10 @@ Technologies:
 - Redux
 - Express
 - MongoDB
-- Passport
+- Stripe
 - OAuth
 
-Project is in very initial stages.
+In progress...
+
+
 
