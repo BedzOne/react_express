@@ -23,7 +23,6 @@ class Login extends Component {
       data: this.state,
     })
     .then(res => {
-      console.log(res)
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.users[0]));
       const loggedUser = localStorage.getItem('user');

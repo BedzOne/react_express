@@ -10,19 +10,12 @@ class Profile extends Component {
     return(
       <div>
         <h2>Profile</h2>
-        <div>
-          <span>First Name: </span><span>{this.props.user.firstName}</span>
-        </div>
-        <div>
-          <span>Last Name: </span><span>{this.props.user.lastName}</span>
-        </div>
-        <div>
-          <span>Email: </span><span>{this.props.user.email}</span>
-        </div>
-        <div>
-          <span>Phone: </span><span>{this.props.user.telephone}</span>
-        </div>
-        <div>Addresses</div>
+        <div><span>First Name: </span><span>{this.props.user.firstName}</span></div>
+        <div><span>Last Name: </span><span>{this.props.user.lastName}</span></div>
+        <div><span>Email: </span><span>{this.props.user.email}</span></div>
+        <div><span>Phone: </span><span>{this.props.user.telephone}</span></div>
+        <hr/>
+        <h3>Addresses</h3>
         <div>
           <span>Delivery Address: </span><span>{this.props.user.addressDelivery}</span>
         </div>

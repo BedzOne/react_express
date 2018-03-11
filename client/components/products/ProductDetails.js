@@ -13,6 +13,10 @@ class ProductDetails extends Component {
     this.handleQuantityChange = this.handleQuantityChange.bind(this);
   }
 
+  componentWillMount() {
+    this.props.getQuantity(1);
+  }
+
   componentWillReceiveProps(nextProps) {
     this.props.getQuantity(nextProps.quantity);
   }

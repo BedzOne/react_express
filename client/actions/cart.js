@@ -1,4 +1,11 @@
-import { ADD_ITEM_TO_CART, GET_CART, DELETE_CART_ITEM, GET_QUANTITY, UPDATE_QUANTITY } from './constants';
+import { 
+  ADD_ITEM_TO_CART, 
+  GET_CART, 
+  DELETE_CART_ITEM, 
+  GET_QUANTITY, 
+  UPDATE_QUANTITY,
+  CLEAR_CART 
+} from './constants';
 
 export function getCart(cart, total) {
   return {
@@ -37,6 +44,13 @@ export function updateCartItem(quantity, price, cart) {
     type: UPDATE_QUANTITY,
     quantity,
     price,
+    cart
+  };
+}
+
+export function clearCart(cart) {
+  return {
+    type: CLEAR_CART,
     cart
   };
 }

@@ -52,7 +52,7 @@ exports.updateUser = (req, res) => {
       console.log('user updated');
       res.json(newUser);
     })
-    .catch(err => res.send(500, { error: err }))
+    .catch(err => res.send(500, { error: err }));
 };
 
 exports.deleteUser = (req, res) => {
@@ -63,41 +63,48 @@ exports.deleteUser = (req, res) => {
       if (!users) return res.sendStatus(404).end();
       return res.sendStatus(200).end();
     })
-    .catch(err => next(err))
+    .catch(err => next(err));
 };
 
 exports.loginUser = (req, res) => {
-  let user = req.body;
-    User.model
-      .find({email: user.email})
-      .exec()
-      .then(users => {
-        if (!users.length) { 
-          res.status(401).json({
-            message: "Auth failed"
-          });
-        } else {
-          bcrypt
-          .compare(user.password, users[0].password)
-          .then(result=> {
-            if (result) {
-              const token = 
-                jwt
-                  .sign({ email: users[0].email, id: users[0]._id },
-                  'secretKey', { expiresIn: "1h"});
-              res.status(200).json({
-                message: "Auth success",
-                token,
-                users
-              });
-            } 
-          })
-          .catch(err => res.status(401).json({message: "Auth failed"}));
-        }     
-      });
+  let user = {
+    email: req.body.email,
+    password: req.body.password
+  };
+  User.model
+    .find({email: user.email})
+    .exec()
+    .then(users => {
+      if (!users.length) { 
+        res.status(401).json({
+          message: "Auth failed - user does not exist"
+        });
+      } else {
+        bcrypt
+        .compare(req.body.password, users[0].password)
+        .then(result=> {
+          if (result) {
+            const token = 
+              jwt
+                .sign({ email: users[0].email, id: users[0]._id },
+                'secretKey', { expiresIn: "1h"});
+            res.status(200).json({
+              message: "Auth success - logged in",
+              token,
+              users
+            });
+          } else {
+            res.json('not working');
+          }
+        })
+        .catch(err => res.status(401).json({message: "Auth failed"}));
+      }     
+    });
 };
 
-exports.getUser = (req, res) => {
+exports.getUser = (User) => {
+
+return function(req, res) {
   User.model  
     .findById(req.params.id)
     .exec()
@@ -105,4 +112,5 @@ exports.getUser = (req, res) => {
       res.json(user);
     })
     .catch(err => res.sendStatus(404));
+  };
 };

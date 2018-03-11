@@ -20,13 +20,9 @@ class AddToCartButton extends Component {
     axios({
       method: 'post',
       url: `http://localhost:5000/cart/${this.props.user._id}`,
-      // data: { cart: cartItem, total: this.props.total }
       data: cartItem
     })
-    .then((res) => {
-      console.log(res.data)
-      this.props.addItemToCart(cartItem, res.data.cart, price);
-    })
+    .then(res => this.props.addItemToCart(cartItem, res.data.cart, price))
     .catch(err => console.log(err));
   }
 

@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.17.1",
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "express-jwt": "^5.3.0",
@@ -22,11 +23,13 @@
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
+    "react-stripe-checkout": "^2.6.3",
     "react-styled-flexbox": "^1.0.4",
     "redux": "^3.7.2",
     "redux-form": "^7.2.3",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
+    "stripe": "^5.5.0",
     "styled-components": "^3.1.6"
   },
   "devDependencies": {

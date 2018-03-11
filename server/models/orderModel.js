@@ -7,7 +7,8 @@ const order = {};
 
 order.schema = new Schema({
   order: [{type: cart.schema}],
-  total: {type: String}
+  total: {type: String},
+  status: {type: String}
 }, {timestamps: {createdAt: 'createdAt'}});
 
 order.model = mongoose.model('Order', order.schema);

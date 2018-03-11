@@ -3,7 +3,8 @@ import {
   GET_CART,
   DELETE_CART_ITEM, 
   GET_QUANTITY, 
-  UPDATE_QUANTITY 
+  UPDATE_QUANTITY,
+  CLEAR_CART
 } from '../actions/constants';
 
 const initialState = {
@@ -25,6 +26,8 @@ const cartReducer = (state = initialState, action) => {
       return {...state, quantity: action.quantity, price: action.price, cart: action.cart}
     case DELETE_CART_ITEM: 
       return {...state, cart: action.cart, item: action.item}
+    case CLEAR_CART:
+      return {...state, cart: initialState.cart}
   }
   return state;
 }

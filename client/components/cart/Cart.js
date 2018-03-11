@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 import CartItem from './CartItem';
 import CheckoutButton from '../checkout/CheckoutButton';
 import BackButton from '../buttons/BackButton';
-
-import { buildOrder } from '../../actions/order';
-import { getCart } from '../../actions/cart';
 
 class Cart extends Component {
   constructor(props) {
     super(props);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getCart();
   }
 

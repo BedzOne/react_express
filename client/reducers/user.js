@@ -5,7 +5,8 @@ import {
   LOGIN_SUCCESS, 
   LOGIN_FAIL, 
   LOG_OUT,
-  UPDATE_ADDRESS
+  UPDATE_ADDRESS,
+  TOKEN_EXPIRED_NOTIFY
 } from '../actions/constants';
 
 const initialState = {
@@ -35,6 +36,8 @@ const userReducer = (state = initialState, action) => {
       return {...state, isLoggedIn: action.logout, user: {}}
     case UPDATE_ADDRESS: 
       return {...state, address: action.address, user: {}}
+    case TOKEN_EXPIRED_NOTIFY: 
+      return {...state, message: action.message, token: action.token}
   }
   return state;
 }

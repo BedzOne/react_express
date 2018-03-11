@@ -2,32 +2,25 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import AddToCartButton from './AddToCartButton';
+import SideBar from './SideBar';
+import Product from './Product';
 
+const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  ${'' /* margin-top: 5em; */}
+`
 const ProductsContainer = styled.ul`
   display: flex;
+  width: 80%;
   flex-wrap: wrap;
   padding-left: 0;
   list-style: none;
 `;
 
-const ProductsLi = styled.li`
-${'' /* display: flex; */}
-  width: calc((100% / 3) - 4em);
-  height: 15em;
-  margin-left: 2em;
-  margin-right: 1em;
-  margin-bottom: 3em;
-  padding: 0.5em;
-  ${'' /* border: 0.05em solid grey; */}
-`;
-
-const ProductImg = styled.img`
-  width: 100%;
-  height: 80%;
-`;
 
 const Header = styled.h2`
+  width: 100%;
   text-align: center;
 `;
 
@@ -46,8 +39,6 @@ const Figure = styled.figure`
   margin-bottom: 2em;
 `;
 
-const url = 'http://localhost:5000/';
-
 class ProductsList extends Component {
   constructor(props) {
     super(props);
@@ -57,22 +48,24 @@ class ProductsList extends Component {
     let productsList;
     productsList = this.props.productsList.map((product, index) => {
       return(
-        <ProductsLi key={product._id}>
-          <ProductImg src={`${url}${product.productImage}`} alt='product image' />
-            <span>{product.name}</span>
-            <span>{product.price}</span>
-            <div>
-              <Link to={`/product/${product._id}`}>See details</Link>
-            </div>   
-        </ProductsLi>
+        <Product 
+          key={product._id}
+          product={product}
+          category={product.category}
+        />
       )
     })
 
     return(
-      <div>
+      <Container>
         <Header>Products</Header>
+        <SideBar 
+          getProducts={this.props.getProducts} 
+          switchCategories={this.props.switchCategories} 
+          productsList={this.props.productsList}
+        />
         <ProductsContainer>{productsList}</ProductsContainer>
-      </div>
+      </Container>
     )
   }
 }

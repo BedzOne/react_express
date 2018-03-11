@@ -14,7 +14,6 @@ const SideBar = () => {
       <ul>
         <li><Link to='/dashboard/profile'>Profile</Link></li>
         <li><Link to='/dashboard/settings'>Settings</Link></li>
-        <li><Link to='/dashboard/payment'>Payment</Link></li>
         <li><Link to='/dashboard/myorders'>My orders</Link></li>
       </ul>
     </Nav>

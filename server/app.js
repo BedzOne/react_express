@@ -4,13 +4,16 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
+const config = require('./config');
+
 const users = require('./routes/users');
 const products = require('./routes/products');
 const cart = require('./routes/cart');
 const order = require('./routes/order');
+const stripeRoute = require('./routes/stripe');
 
-const db = require('./config').mongoConnect();
-const port = process.env.PORT || 5000;
+
+config.mongoConnect();
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
@@ -32,5 +35,6 @@ app.use('/user', users);
 app.use('/product', products);
 app.use('/cart', cart);
 app.use('/order', order);
+app.use('/charge', stripeRoute);
 
-app.listen(port, () => console.log(`server running on port ${port}...`));
+app.listen(config.port, () => console.log(`server running on port ${config.port}...`));

@@ -33,13 +33,15 @@ userModel.schema = new Schema({
   confirmPassword: {type: String, required: true},
   addressDelivery: [address.schema],
   addressBilling: [address.schema],
-  telephone: {type: Number},
+  phone: {type: Number},
   cart: [cart.schema],
   order: [order.schema],
 }, {timestamps: {createdAt: 'createdAt'} });
 
 userModel.schema.pre('save', function(next) {
   let user = this;
+  if(!user.isModified("password")) return next();
+
   bcrypt.hash(user.password, 10)
     .then(hash => {
       user.password = hash;

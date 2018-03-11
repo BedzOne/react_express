@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Route, Redirect } from 'react-router';
+import { connect } from 'react-redux';
+import { withRouter } from "react-router-dom";
 import axios from 'axios';
+import StripeCheckout from 'react-stripe-checkout';
+
+const CURRENCY = 'GBP';
+const STRIPE_PUBLISHABLE = 'pk_test_M3OXnqwI8FlBlVpRlj8Zsnir';
+
+const amountInCents = amount => (amount * 100).toFixed(0);
 
 const savedUser = JSON.parse(localStorage.getItem('user'));
 
@@ -7,7 +17,7 @@ class Checkout extends Component {
   constructor(props) {
     super(props); 
 
-    this.pay = this.pay.bind(this)
+    this.onToken = this.onToken.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -18,48 +28,45 @@ class Checkout extends Component {
     this.props.getCart()
   }
 
-  pay() {
-    this.props.getCart()
-    console.log(this.props.cart)
+  onToken(token) {
     axios({
       method: 'post',
-      url: `http://localhost:5000/order/${savedUser._id}`,
-      data: {order: this.props.cart, total: this.props.total}
+      url: 'http://localhost:5000/charge', 
+      data: { 
+        stripeToken: token,
+        amount: (this.props.amount * 100).toFixed(0),
+        currency: CURRENCY,
+      }
     })
     .then(res => {
-      console.log(res)
+      this.props.getCart();
+      this.props.buildOrder(this.props.cart, this.props.total)
     })
-    .catch(err => console.log(err))
+    .then(res => {
+      this.props.orderSuccess(true)
+      this.props.history.push('/checkout-success');
+    })
+    .catch(err => console.log('pay fail'));
   }
 
-  handleSubmit(e) {
-    e.preventDefault()
-  }
+
 
   render() {
     return(
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor='name'>Name{this.props.total}</label>
-          <input type='text' name='name' id='name' />
-
-          <label htmlFor='cardNumber'>Card number</label>
-          <input type='number' name='cardNumber' id='cardNumber' />
-
-          <label htmlFor='expiry'>Expiry date</label>
-          <input type='text' name='expiry' id='expiry' />
-
-          <label htmlFor='cvc'>CVC</label>
-          <input type='text' name='cvc' id='cvc' />
-
-          <input onClick={this.pay}type='submit' value='Pay' />
-        </form>
-
-        <div>total: {this.props.total}</div>
-        <div>Items in basket: {this.props.cart.length}</div>
-      </div>
+        <StripeCheckout
+          name={'payment'}
+          description={this.props.description}
+          ComponentClass='Button'
+          email={this.props.user.email}
+          amount={amountInCents(this.props.amount)}
+          token={this.onToken}
+          currency={CURRENCY}
+          stripeKey={STRIPE_PUBLISHABLE}
+        />
+    </div>
     )
   }
 }
 
-export default Checkout;
+export default withRouter(Checkout);
