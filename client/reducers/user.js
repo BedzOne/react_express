@@ -36,6 +36,8 @@ const userReducer = (state = initialState, action) => {
       return {...state, isLoggedIn: action.logout, user: {}}
     case UPDATE_ADDRESS: 
       return {...state, address: action.address, user: {}}
+    // case CHANGE_PASSWORD:
+    //   return {...state, password: action.password}
     case TOKEN_EXPIRED_NOTIFY: 
       return {...state, message: action.message, token: action.token}
   }

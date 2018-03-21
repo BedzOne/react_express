@@ -2,13 +2,13 @@ import { SHOW_PRODUCTS, SWITCH_CATEGORIES } from '../actions/constants';
 
 const initialState = {
   productsList: [],
-  category: ''
+  category: null
 };
 
 const productsReducer = (state = initialState, action) => {
   switch (action.type) {
     case SHOW_PRODUCTS: 
-      return {...state, productsList: action.payload}
+      return {...state, productsList: action.products}
     case SWITCH_CATEGORIES:
       return {...state, category: action.category}
   }

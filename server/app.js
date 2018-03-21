@@ -10,8 +10,8 @@ const users = require('./routes/users');
 const products = require('./routes/products');
 const cart = require('./routes/cart');
 const order = require('./routes/order');
+const categories = require('./routes/categories');
 const stripeRoute = require('./routes/stripe');
-
 
 config.mongoConnect();
 
@@ -32,9 +32,10 @@ app.use(cors());
 //routes
 
 app.use('/user', users);
-app.use('/product', products);
+app.use('/products', products);
 app.use('/cart', cart);
 app.use('/order', order);
 app.use('/charge', stripeRoute);
+app.use('/categories', categories);
 
 app.listen(config.port, () => console.log(`server running on port ${config.port}...`));

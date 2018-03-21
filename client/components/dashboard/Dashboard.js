@@ -32,6 +32,7 @@ class Dashboard extends Component {
           render={() => 
           <Settings 
             logOut={this.props.logOut} 
+            getUser={this.props.getUser} 
             user={this.props.user} 
             updateUser={this.props.updateUser} 
             changeAddress={this.props.changeAddress}/>} 

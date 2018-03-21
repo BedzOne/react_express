@@ -17,13 +17,20 @@ class AddToCartButton extends Component {
     let cartItem = Object.assign({}, this.props.product);
     cartItem.price = price;
     cartItem.quantity = this.props.quantity;
-    axios({
-      method: 'post',
-      url: `http://localhost:5000/cart/${this.props.user._id}`,
-      data: cartItem
-    })
-    .then(res => this.props.addItemToCart(cartItem, res.data.cart, price))
-    .catch(err => console.log(err));
+    if (this.props.isLoggedIn) {
+      axios({
+        method: 'post',
+        url: `http://localhost:5000/cart/${this.props.user._id}`,
+        data: cartItem
+      })
+      .then(res => {
+        this.props.addItemToCart(cartItem, res.data.cart, price)
+      })
+      .catch(err => console.log(err));
+    } else {
+      console.log('not logged ins')
+      this.props.addToCartError(true)
+    }
   }
 
   render() {

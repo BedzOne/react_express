@@ -4,14 +4,16 @@ import {
   DELETE_CART_ITEM, 
   GET_QUANTITY, 
   UPDATE_QUANTITY,
-  CLEAR_CART
+  CLEAR_CART,
+  ADD_TO_CART_ERROR
 } from '../actions/constants';
 
 const initialState = {
   cart: [],
   quantity: 1,
   item: {},
-  total: 0
+  total: 0,
+  error: false
 };
 
 const cartReducer = (state = initialState, action) => {
@@ -28,6 +30,8 @@ const cartReducer = (state = initialState, action) => {
       return {...state, cart: action.cart, item: action.item}
     case CLEAR_CART:
       return {...state, cart: initialState.cart}
+    case ADD_TO_CART_ERROR: 
+      return {...state, error: action.error}
   }
   return state;
 }

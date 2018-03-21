@@ -9,9 +9,10 @@ router.get('/register', user_handler.getUsers);
 
 router.delete('/:userId', checkAuth, user_handler.deleteUser);
 router.put('/:userId', user_handler.updateUser);
+router.post('/password/:userId', user_handler.changeUserPassword);
 
 router.post('/login', user_handler.loginUser);
-router.get('/:id', user_handler.getUser);
+router.get('/:userId', user_handler.getSingleUser);
 
 module.exports = router;
 

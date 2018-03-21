@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import AddToCartButton from './AddToCartButton';
 import BackButton from '../buttons/BackButton';
+import AddToCartErrorMessage from '../popups/AddToCartErrorMessage';
 
 const url = 'http://localhost:5000/';
 
@@ -19,6 +20,7 @@ class ProductDetails extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.props.getQuantity(nextProps.quantity);
+    this.props.addToCartError(nextProps.error)
   }
 
   handleQuantityChange(e) {
@@ -61,6 +63,8 @@ class ProductDetails extends Component {
               getCart={this.props.getCart}
               updateCartItem={this.props.updateCartItem}
               total={this.props.total}
+              isLoggedIn={this.props.isLoggedIn}
+              addToCartError={this.props.addToCartError}
             />
             <select onChange={this.handleQuantityChange}>
               {quantityOptions}
@@ -69,6 +73,7 @@ class ProductDetails extends Component {
           </div>
         </div>
         <Link to='/home'><BackButton /></Link>
+        {this.props.error ? <AddToCartErrorMessage addToCartError={this.props.addToCartError}/> : null}
       </div>
     )
   }

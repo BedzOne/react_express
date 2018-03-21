@@ -23,13 +23,12 @@ import Footer from '../Components/Footer';
 
 import { logOut, loginSuccess } from '../actions/login';
 import { registerSuccess } from '../actions/register';
-import { updateUser, getUser, updateAddress, tokenExpired }  from '../actions/user';
+import { updateUser, getUser, updateAddress, changePassword, tokenExpired }  from '../actions/user';
 import { showProducts, switchCategories }  from '../actions/products';
-import { getCart, addItemToCart, deleteCartItem, getQuantity, updateCartItem, clearCart } from '../actions/cart';
+import { getCart, addItemToCart, deleteCartItem, getQuantity, updateCartItem, clearCart, addToCartError } from '../actions/cart';
 import { buildOrder, getOrders, checkOrderFail, checkOrderSuccess } from '../actions/order';
 
 injectGlobal`
-
   body {
     background: #F5EFED;
   }
@@ -56,7 +55,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.getCart();
+    // this.props.getCart();
     this.props.getProducts();
     if (userLoggedIn) {
       this.props.loginSuccess(true);
@@ -66,22 +65,30 @@ class App extends Component {
 
   render() {
     let ProductDetailsRoute;
-    ProductDetailsRoute = this.props.productsList.map((product) => {
+    ProductDetailsRoute = this.props.productsList.map((el) => {
       return(
-        <Route exact path={`/product/${product._id}`} 
-          render={() => 
-          <ProductDetails 
-            key={product._id} 
-            getQuantity={this.props.getQuantity} 
-            product={product} 
-            quantity={this.props.quantity} 
-            getCart={this.props.getCart} 
-            cart={this.props.cart} 
-            addItemToCart={this.props.addItemToCart} 
-            user={this.props.user} 
-            updateCartItem={this.props.updateCartItem} 
-        />} 
-        />
+        el.products.map((product) => {
+        return(
+          <Route 
+            exact path={`/product/${product._id}`} 
+            render={() => 
+            <ProductDetails 
+              key={product._id} 
+              getQuantity={this.props.getQuantity} 
+              product={product} 
+              quantity={this.props.quantity} 
+              getCart={this.props.getCart} 
+              cart={this.props.cart} 
+              addItemToCart={this.props.addItemToCart} 
+              user={this.props.user} 
+              updateCartItem={this.props.updateCartItem} 
+              isLoggedIn={this.props.isLoggedIn} 
+              addToCartError={this.props.addToCartError}
+              error={this.props.error}
+            />} 
+          />
+        )
+      })
       )
     })
     return(
@@ -99,7 +106,9 @@ class App extends Component {
               <ProductsList 
                 productsList={this.props.productsList} 
                 getProducts={this.props.getProducts} 
-                switchCategories={this.props.switchCategories}/>} 
+                switchCategories={this.props.switchCategories}
+                category={this.props.category}
+                />} 
               />
             <Route 
               exact path='/login' 
@@ -119,6 +128,7 @@ class App extends Component {
                 updateUser={this.props.updateUser} 
                 user={this.props.user} 
                 changeAddress={this.props.changeAddress} 
+                changePassword={this.props.changePassword}
                 getOrders={this.props.getOrders}
                 orders={this.props.orders}/>))} 
                />
@@ -136,7 +146,9 @@ class App extends Component {
               exact path='/register' 
               render={() => 
               <Register 
-                registerSuccess={this.props.registerSuccess}/>}
+                registerSuccess={this.props.registerSuccess}
+                isRegistered={this.props.isRegistered}
+                />}
               />
             {ProductDetailsRoute}
             <Route 
@@ -174,12 +186,14 @@ const mapStateToProps = (state) => {
     register: state.registerReducer,
     isLoggedIn: state.userReducer.isLoggedIn,
     productsList: state.productsReducer.productsList,
+    category: state.productsReducer.category,
     user: state.userReducer.user,
     cart: state.cartReducer.cart,
     quantity: state.cartReducer.quantity,
     total: state.cartReducer.total,
     orderSuccess: state.orderReducer.orderSuccess,
-    orders: state.orderReducer.orders
+    orders: state.orderReducer.orders,
+    error: state.cartReducer.error
   };
 }
 
@@ -197,6 +211,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateUser(user))
     },
 
+    changePasword: (password) => {
+      dispatch(changePassword(password))
+    },
+
     getUser: (user) => {
       dispatch(getUser(user))
     },
@@ -206,15 +224,19 @@ const mapDispatchToProps = (dispatch) => {
     },
     
     getProducts: () => {
-      axios.get('http://localhost:5000/product/list')
-        .then((res) => {
-          dispatch(showProducts(res.data))
+      axios.get('http://localhost:5000/products/list')
+        .then((res) => {       
+          dispatch(showProducts(res.data))      
         })
         .catch(err => console.log(err))
     },
 
     switchCategories: (category) => {
-      dispatch(switchCategories(category))
+      axios.get(`http://localhost:5000/categories/${category}`)
+      .then(res => {
+        dispatch(switchCategories(category))
+      })
+      .catch(err => console.log(err)) 
     },
 
     getCart: (cart, total) => {
@@ -279,6 +301,10 @@ const mapDispatchToProps = (dispatch) => {
           dispatch(clearCart(cart))
         })
         .catch(err => console.log(res));
+    },
+
+    addToCartError: (error) => {
+      dispatch(addToCartError(error))
     },
 
     changeAddress: (address) => {

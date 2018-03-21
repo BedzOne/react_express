@@ -7,7 +7,6 @@ product.schema = new Schema({
   name: {type: String},
   price: {type: Number},
   desc: {type: String},
-  category: {type: String},
   tag: {type: String},
   size: {type: String},
   productImage: {type: String},
@@ -17,4 +16,3 @@ product.schema = new Schema({
 product.model = mongoose.model('Product', product.schema);
 
 module.exports = product;
-

@@ -3,7 +3,8 @@ import axios from 'axios';
 import { withRouter } from "react-router-dom";
 
 let userLoggedIn = localStorage.getItem('token');
-    console.log(userLoggedIn)
+const savedUser = JSON.parse(localStorage.getItem('user'));
+console.log(savedUser)
 
 class Settings extends Component {
   constructor(props) {
@@ -13,14 +14,22 @@ class Settings extends Component {
       firstName: this.props.user.firstName,
       lastName: this.props.user.lastName,
       email: this.props.user.email,
+      phone: '',
       password: '',
       confirmPassword: '',
+      newPassword: '',
       addressBilling: this.props.user.addressBilling,
       addressDelivery: this.props.user.addressDelivery
     };
 
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
+  }
+
+  componentWillMount() {
+    this.props.getUser();
+    console.log(this.props.user)
   }
 
   handleSubmit(e) {
@@ -29,8 +38,8 @@ class Settings extends Component {
     if (userLoggedIn) {
       axios({
         method: 'PUT',
-        url: `http://localhost:5000/user/${this.props.user._id}`,
-        headers: {'Authorization': `Bearer ${userLoggedIn}`},
+        url: `http://localhost:5000/user/${savedUser._id}`,
+        headers: {Authorization: `Bearer ${userLoggedIn}`},
         data: this.state
       })
       .then((res) => {
@@ -42,6 +51,24 @@ class Settings extends Component {
         localStorage.clear();
         this.props.history.push('/login');
       })
+      .catch(err => console.log(err))
+    }
+  }
+
+  handlePasswordSubmit(e) {
+    e.preventDefault();
+    if (userLoggedIn) {
+      axios({
+        method: 'POST',
+        url: `http://localhost:5000/user/password/${savedUser._id}`,
+        headers: {Authorization: `Bearer ${userLoggedIn}`},
+        data: {
+          password: this.state.password,
+          newPassword: this.state.newPassword,
+          confirmPassword: this.state.confirmPassword
+        }
+      })
+      .then(res => console.log(res))
       .catch(err => console.log(err))
     }
   }
@@ -58,7 +85,7 @@ class Settings extends Component {
   }
 
   render() {
-    let user = this.props.currentUser;
+    // let user = this.props.currentUser;
     return(
       <div>
         <div>Settings</div>
@@ -74,10 +101,10 @@ class Settings extends Component {
           <input onChange={this.handleOnChange} value={this.state.email} id='email' name='email' type='email' required/> 
 
           <label htmlFor='email'>Phone Number</label>
-          <input onChange={this.handleOnChange} value={this.state.phone} id='phone' name='phone' type='number' required/> 
+          <input onChange={this.handleOnChange} value={this.state.phone} id='phone' name='phone' type='text' required/> 
 
           <label htmlFor='password'>Password</label>
-          <input onChange={this.handleOnChange}  id='password' name='password' type='password' required/> 
+          <input onChange={this.handleOnChange} id='password' name='password' type='password' required/> 
 
           <label htmlFor='confirmPassword'>Confirm Password</label>
           <input onChange={this.handleOnChange} id='confirmPassword' name='confirmPassword' type='password' required />
@@ -88,13 +115,13 @@ class Settings extends Component {
         <h2>Change Password</h2>
         <form onSubmit={this.handlePasswordSubmit}>
           <label htmlFor='password'>Existing Password</label>
-          <input onChange={this.handleOnChange}  id='password' name='password' type='password' required/> 
+          <input onChange={this.handleOnChange} value={this.state.password} id='password' name='password' type='password' required/> 
 
-          <label htmlFor='password'>New Password</label>
-          <input onChange={this.handleOnChange}  id='password' name='password' type='password' required/> 
+          <label htmlFor='newPassword'>New Password</label>
+          <input onChange={this.handleOnChange} value={this.state.newPassword} id='newPassword' name='newPassword' type='password' required/> 
 
           <label htmlFor='confirmPassword'>Confirm Password</label>
-          <input onChange={this.handleOnChange} id='confirmPassword' name='confirmPassword' type='password' required />
+          <input onChange={this.handleOnChange} value={this.state.confirmPassword} id='confirmPassword' name='confirmPassword' type='password' required />
 
           <input type='submit' value='Change Password' />
         </form>

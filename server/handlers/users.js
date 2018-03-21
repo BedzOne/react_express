@@ -43,16 +43,16 @@ exports.updateUser = (req, res) => {
   let newUser = req.body;
 
   User.model
-    .findByIdAndUpdate(req.params.userId, newUser, {new: true})
+    .findByIdAndUpdate(req.params.userId, newUser, {new:true})
     .exec()
     .then(user => {
+      bcrypt
+      .compare(req.body.password, user.password)
       user.save(function (err, user) {
         if (err) return (err);
       });
-      console.log('user updated');
-      res.json(newUser);
     })
-    .catch(err => res.send(500, { error: err }));
+    .catch(err => res.sendStatus(404));
 };
 
 exports.deleteUser = (req, res) => {
@@ -71,6 +71,7 @@ exports.loginUser = (req, res) => {
     email: req.body.email,
     password: req.body.password
   };
+
   User.model
     .find({email: user.email})
     .exec()
@@ -102,15 +103,34 @@ exports.loginUser = (req, res) => {
     });
 };
 
-exports.getUser = (User) => {
+exports.getSingleUser = (User) => {
+  return function(req, res) {
+    User.model  
+      .findById(req.params.userId)
+      .exec()
+      .then(user => {
+        res.json(user);
+      })
+      .catch(err => res.sendStatus(404));
+    };
+};
 
-return function(req, res) {
+exports.changeUserPassword = (req, res) => {
+  let newPassword = {
+    password: req.body.password,
+    newPassword: req.body.newPassword,
+    confirmPassword: req.body.confirmPassword
+  }
+
   User.model  
-    .findById(req.params.id)
+    .findById(req.params.userId)
     .exec()
-    .then(user => {
-      res.json(user);
+    .then(users => {
+      res.json(users)
+      users.password = req.body.newPassword
+      users.save(function(err) {
+        if (err) console.log(err)
+      })
     })
-    .catch(err => res.sendStatus(404));
-  };
+    .catch(err => res.sendStatus(404))
 };

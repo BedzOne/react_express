@@ -49,8 +49,6 @@ class Checkout extends Component {
     .catch(err => console.log('pay fail'));
   }
 
-
-
   render() {
     return(
       <div>

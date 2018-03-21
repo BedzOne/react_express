@@ -4,7 +4,8 @@ import {
   DELETE_CART_ITEM, 
   GET_QUANTITY, 
   UPDATE_QUANTITY,
-  CLEAR_CART 
+  CLEAR_CART,
+  ADD_TO_CART_ERROR
 } from './constants';
 
 export function getCart(cart, total) {
@@ -53,4 +54,11 @@ export function clearCart(cart) {
     type: CLEAR_CART,
     cart
   };
+}
+
+export function addToCartError(error) {
+  return {
+    type: ADD_TO_CART_ERROR,
+    error
+  }
 }

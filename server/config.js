@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const STRIPE_SECRET_KEY = 'STRIPE_SECRET_KEY';
+const STRIPE_SECRET_KEY = 'sk_test_ucChnn74yhaqhtpmEwabqqwL';
 
 exports.stripe = require('stripe')(STRIPE_SECRET_KEY);
 

@@ -6,6 +6,11 @@ class Profile extends Component {
     super(props);
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps.user);
+    // this.props.getUser();
+  } 
+
   render() {
     return(
       <div>

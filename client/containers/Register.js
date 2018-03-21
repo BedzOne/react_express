@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import registerSuccess from '../components/RegisterSuccess';
+import RegisterSuccess from '../components/RegisterSuccess';
 
 class Register extends Component {
   constructor(props) {
@@ -30,7 +32,10 @@ class Register extends Component {
       headers: { "Content-Type": "application/json" }
     }).then((res) => {
         this.props.registerSuccess(true);
-        this.props.history.push('/login');
+        setTimeout(() => {
+          this.props.history.push('/login');
+        }, 2000);
+        
       })
       .catch(err => console.log(err));
   }
@@ -45,6 +50,12 @@ class Register extends Component {
   }
  
   render() {
+
+    const showModal = () => {
+      if (this.props.isRegistered) {
+        return <RegisterSuccess />  
+      }
+    }
     return(
       <div>
       <h2>Please register</h2>
@@ -66,6 +77,7 @@ class Register extends Component {
 
           <input type='submit' value='Register' />
         </form>
+        {this.props.isRegistered ? <RegisterSuccess /> : null}
       </div>
     )
   }

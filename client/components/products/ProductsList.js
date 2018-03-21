@@ -8,7 +8,6 @@ import Product from './Product';
 const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
-  ${'' /* margin-top: 5em; */}
 `
 const ProductsContainer = styled.ul`
   display: flex;
@@ -18,25 +17,21 @@ const ProductsContainer = styled.ul`
   list-style: none;
 `;
 
-
 const Header = styled.h2`
   width: 100%;
   text-align: center;
 `;
 
-const FigCaption = styled.figcaption`
-  width: 100%;
-  ${'' /* height: 20%; */}
-  padding: 1em;
-  border-top: 0.01em solid grey;
-`;
-
-const Figure = styled.figure`
-  width: 100%;
-  ${'' /* height: 100%; */}
-  padding: 0.5em;
-  margin:0;
-  margin-bottom: 2em;
+const ProductsLi = styled.li`
+  position: relative;
+  width: calc((100% / 3) - 4em);
+  height: 18em;
+  margin-left: 2em;
+  margin-right: 1em;
+  margin-bottom: 3em;
+  padding-bottom: 0;
+  background: white;
+  box-shadow: 0px 0px 11px 1px rgba(138,138,138,1);
 `;
 
 class ProductsList extends Component {
@@ -46,15 +41,37 @@ class ProductsList extends Component {
   
   render() {
     let productsList;
-    productsList = this.props.productsList.map((product, index) => {
-      return(
-        <Product 
-          key={product._id}
-          product={product}
-          category={product.category}
-        />
-      )
+    let singleCategory;
+
+    let match = this.props.productsList.some((el) => {
+      if (this.props.category === el.id) {
+        return true;
+      }
     })
+
+    if (this.props.category === null) {
+      productsList = this.props.productsList.map((el) => {
+        return (
+          el.products.map((product) => { 
+            return(
+              <Product key={product._id} product={product}/>
+            )
+          })
+        ) 
+      })
+    } else {
+      let singleCategory = this.props.productsList.filter((el) => {
+        if (this.props.category === el._id) {
+          return el;
+        }
+      })
+
+      productsList = singleCategory[0].products.map(product => {
+        return(
+          <Product key={product._id} product={product}/>
+        )
+      })
+    }
 
     return(
       <Container>

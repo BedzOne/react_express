@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
+
+import Category from './Category';
 
 const Nav = styled.nav`
   height: 100%;
@@ -10,35 +13,24 @@ const Nav = styled.nav`
 class SideBar extends Component {
   constructor(props) {
     super(props);
-
-    this.switch = this.switch.bind(this);
   }
 
   componentWillMount() {
     this.props.getProducts()
   }
 
-  switch(e) {
-    this.props.productsList.filter(product => {
-      console.log(product.tag)
-      if (product.tag == e.target.id) {
-        console.log('match')
-        this.props.switchCategories(product.tag)
-      } else {
-        console.log('no')
-      }
-    })
-  }
-
   render() {
+    let category = this.props.productsList.map(product => {
+      return (
+        <Category key={product._id} product={product} getProducts={this.props.getProducts} switchCategories={this.props.switchCategories}/>
+      )
+    })
+
     return(
       <Nav>
         <h1>Shop by Category</h1>
         <ul>
-            <li onClick={this.switch} id='sports'>sports</li>
-            <li>B</li>
-            <li>C</li>
-            <li>D</li>
+          {category}
         </ul>
       </Nav>
     )

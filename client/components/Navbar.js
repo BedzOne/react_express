@@ -47,7 +47,7 @@ class Navbar extends Component {
       return [
         <NavListItem key='4'><Link to='/dashboard/profile'>Dashboard</Link></NavListItem>,
         <NavListItem key='5'><Link onClick={this.logoutUser} to='/home'>Logout</Link></NavListItem>,
-        <NavListItem key='3'><Link to='/cart'><i class="fas fa-shopping-cart"></i><CartItems>{this.props.cart.length}</CartItems></Link></NavListItem>
+        <NavListItem key='3'><Link to='/cart'><i className="fas fa-shopping-cart"></i><CartItems>{this.props.cart ? this.props.cart.length : null}</CartItems></Link></NavListItem>
       ]
     }
     return [

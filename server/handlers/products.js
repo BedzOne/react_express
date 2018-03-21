@@ -1,4 +1,5 @@
 const Product = require('../models/productModel');
+const ProductCatalog = require('../models/categoryModel');
 
 exports.uploadProduct = (req, res) => {
   const product = new Product.model({
@@ -11,14 +12,21 @@ exports.uploadProduct = (req, res) => {
     productImage: req.file.path
   });
 
-  product.save((err, product) => {
-    if (err) res.sendStatus(404);
-    res.sendStatus(200);
-  });
+  ProductCatalog
+    .findById(req.params.id)
+    .exec()
+    .then(docs => {
+      docs.products.push(product)
+      docs.save(function(err, docs) {
+        if (err) res.sendStatus(404);
+        res.json(docs);
+      });
+    })
+    .catch(err => res.sendStatus(404));    
 };
 
 exports.getProducts = (req, res) => {
-  Product.model
+  ProductCatalog
     .find()
     .exec((err, products) => {
       if (err) res.sendStatus(404);
@@ -27,12 +35,22 @@ exports.getProducts = (req, res) => {
 };
 
 exports.removeProduct = (req, res) => {
-  Product.model 
-    .findByIdAndRemove(req.params.id)
+  ProductCatalog
+    .findById(req.params.id)
     .exec()
-    .then(products => {
-      if (!products) return res.sendStatus(404);
-      return res.sendStatus(200);
+    .then(docs => {
+      let getIndex = docs.products.some((product, index) => {
+        if (product._id == req.params.productId) {
+          console.log('match', index);
+          return index;
+        }
+      })
+
+      docs.products.splice(getIndex, 1);
+      docs.save(function(err, docs) {
+        if (err) res.sendStatus(404);
+        res.json(docs);
+      });
     })
     .catch(err => res.sendStatus(404));
 };

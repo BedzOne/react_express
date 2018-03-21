@@ -1,4 +1,11 @@
-import { GET_USER, UPDATE_USER, DELETE_USER, UPDATE_ADDRESS, TOKEN_EXPIRED_NOTIFY } from './constants';
+import { 
+  GET_USER, 
+  UPDATE_USER, 
+  DELETE_USER, 
+  UPDATE_ADDRESS, 
+  TOKEN_EXPIRED_NOTIFY,
+  CHANGE_PASSWORD
+} from './constants';
 
 export function getUser(user) {
   return {
@@ -26,6 +33,13 @@ export function updateAddress(address) {
     type: UPDATE_ADDRESS, 
     address
   };
+}
+
+export function changePassword(password) {
+  return {
+    type: CHANGE_PASSWORD,
+    password
+  }
 }
 
 export function tokenExpired(message,token) {

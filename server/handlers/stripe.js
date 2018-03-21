@@ -2,7 +2,6 @@ const stripe = require('../config').stripe;
   
 exports.chargeCard = (req, res) => {
   res.json(req.body);
-  
   stripe.customers.list({
     limit: 100,
     email: req.body.stripeToken.email
