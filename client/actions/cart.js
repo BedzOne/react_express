@@ -8,57 +8,82 @@ import {
   ADD_TO_CART_ERROR
 } from './constants';
 
-export function getCart(cart, total) {
-  return {
-    type: GET_CART,
-    cart,
-    total
-  };
+const userLoggedIn = localStorage.getItem('token');
+const savedUser = JSON.parse(localStorage.getItem('user'));
+
+import axios from 'axios';
+
+export const getCart = (cart, total) => dispatch => {
+  axios.get(`http://localhost:5000/cart/${savedUser._id}`)
+    .then(res => {
+      total = res.data.cart.reduce((prev, cur) => {
+        let result = Number(cur.price) + Number(prev);
+        return result.toFixed(2);
+      }, 0);
+      dispatch({
+        type: GET_CART,
+        cart: res.data.cart,
+        total
+      });
+    })
+    .catch(err => console.log(err))
 }
 
-export function addItemToCart(item, cart, price) {
-  return {
-    type: ADD_ITEM_TO_CART,
-    item,
-    cart,
-    price,
-  };
+export const addItemToCart = (item, price) => dispatch => {
+  axios({
+    method: 'post',
+    url: `http://localhost:5000/cart/${savedUser._id}`,
+    data: item
+  })
+  .then(res => {
+    dispatch({
+      type: ADD_ITEM_TO_CART,
+      item,
+      cart: res.data.cart,
+      price,
+    })
+  })
+  .catch(err => console.log(err));
 }
 
-export function deleteCartItem(item, cart) {
-  return {
-    type: DELETE_CART_ITEM,
-    item,
-    cart
-  };
+export const deleteCartItem = (item, cart) => dispatch => {
+  axios.delete(`http://localhost:5000/cart/${savedUser._id}/?itmId=${item._id}`)
+      .then(res => {
+        dispatch({
+          type: DELETE_CART_ITEM,
+          item,
+          cart
+        })
+      })
+      .catch(err => console.log(err));
 }
 
-export function getQuantity(quantity) {
-  return {
+export const getQuantity = quantity => ({
     type: GET_QUANTITY,
     quantity
-  };
-}
+});
 
-export function updateCartItem(quantity, price, cart) {
+export const updateCartItem = (quantity, price, cart) => dispatch => {
   return {
     type: UPDATE_QUANTITY,
     quantity,
     price,
     cart
   };
-}
+};
 
-export function clearCart(cart) {
-  return {
-    type: CLEAR_CART,
-    cart
-  };
-}
+export const clearCart = cart => dispatch => {
+  axios.delete(`http://localhost:5000/cart/empty/${savedUser._id}`)
+  .then(res => {
+    dispatch({
+      type: CLEAR_CART,
+      cart
+    })
+  })
+  .catch(err => console.log(res));
+};
 
-export function addToCartError(error) {
-  return {
+export const addToCartError = error => ({
     type: ADD_TO_CART_ERROR,
     error
-  }
-}
+});

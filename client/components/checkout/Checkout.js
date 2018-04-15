@@ -40,11 +40,14 @@ class Checkout extends Component {
     })
     .then(res => {
       this.props.getCart();
-      this.props.buildOrder(this.props.cart, this.props.total)
-    })
-    .then(res => {
-      this.props.orderSuccess(true)
-      this.props.history.push('/checkout-success');
+      if (res.status == 200) {
+        this.props.buildOrder(this.props.cart, this.props.total)
+        this.props.orderSuccess(true)
+        this.props.history.push('/checkout-success');
+      } else if (res.status >= 400 || res.status <= 500){
+        this.props.orderFail(true);
+        this.props.history.push('/checkout-fail')
+      }
     })
     .catch(err => console.log('pay fail'));
   }

@@ -1,23 +1,38 @@
-import { LOGIN_SUCCESS, LOGIN_FAIL, LOG_OUT } from './constants';
+import { LOGIN_SUCCESS, LOGIN_FAIL, LOG_OUT, LOG_IN, CREATE_TOKEN } from './constants';
 
-export function loginSuccess(login) {
-  return {
-    type: LOGIN_SUCCESS,
-    login,
-  };
-}
+export const logUserIn = user => dispatch => {
+  localStorage.setItem('user', JSON.stringify(user));
+  dispatch({
+    type: LOG_IN,
+    user: user
+  }) 
+};
 
-export function loginFail(logFail) {
-  return {
-    type: LOGIN_FAIL,
-    logFail
-  };
-}
+export const createToken = token => dispatch => {
+  localStorage.setItem('token', token);
+  dispatch({
+    type: CREATE_TOKEN,
+    token
+  });
+};
 
-export function logOut(logout, user) {
+export const loginSuccess = isLoggedIn => ({
+  type: LOGIN_SUCCESS,
+  isLoggedIn
+})
+
+export const loginFail = isLoggedIn => ({
+  type: LOGIN_FAIL,
+  isLoggedIn
+});
+
+export const logOut = (logout, user) => {
+  localStorage.removeItem('user')
+  localStorage.removeItem('token')
+  
   return {
     type: LOG_OUT,
     logout,
     user
-  };
+  }
 }

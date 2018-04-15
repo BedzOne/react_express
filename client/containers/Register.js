@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
-import registerSuccess from '../components/RegisterSuccess';
+
 import RegisterSuccess from '../components/RegisterSuccess';
+
+import { Form } from './styled';
 
 class Register extends Component {
   constructor(props) {
@@ -18,48 +20,44 @@ class Register extends Component {
     };
 
     this.handleOnChange = this.handleOnChange.bind(this);
-    this.onSignUp = this.onSignUp.bind(this);
+    this.handleSignUp = this.handleSignUp.bind(this);
   }
 
-  onSignUp(e) {
+  handleSignUp(e) {
     e.preventDefault();
-
     axios({
       method: 'POST',
       url: 'http://localhost:5000/user/register',
       data: this.state,
       responseType: 'json',
       headers: { "Content-Type": "application/json" }
-    }).then((res) => {
-        this.props.registerSuccess(true);
-        setTimeout(() => {
-          this.props.history.push('/login');
-        }, 2000);
-        
-      })
-      .catch(err => console.log(err));
+    })
+    .then((res) => {
+      this.props.registerSuccess(true);
+      setTimeout(() => {
+        this.props.history.push('/login');
+      }, 2000);
+    })
+    .catch(err => console.log(err));
   }
 
   handleOnChange(e) {
     const value = e.target.value;
     const name = e.target.name;
-
-    this.setState({
-      [name]: value
-    });
+    this.setState({[name]: value});
   }
  
   render() {
-
     const showModal = () => {
       if (this.props.isRegistered) {
         return <RegisterSuccess />  
       }
     }
+
     return(
       <div>
       <h2>Please register</h2>
-        <form onSubmit={this.onSignUp}>
+        <Form onSubmit={this.handleSignUp}>
           <label htmlFor='firstName'>First Name</label>
           <input onInput={this.handleOnChange} id='firstName' name='firstName' type='text' />
 
@@ -76,7 +74,7 @@ class Register extends Component {
           <input onChange={this.handleOnChange} id='confirmPassword' name='confirmPassword' type='password' />
 
           <input type='submit' value='Register' />
-        </form>
+        </Form>
         {this.props.isRegistered ? <RegisterSuccess /> : null}
       </div>
     )

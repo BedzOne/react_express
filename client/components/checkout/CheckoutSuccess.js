@@ -8,7 +8,6 @@ class CheckoutSuccess extends Component {
     setTimeout(() => {
       this.props.history.push('/home');
     }, 3000);
-    
   }
   
   render() {

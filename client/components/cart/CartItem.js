@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
 const savedUser = JSON.parse(localStorage.getItem('user'));
 
@@ -18,12 +17,8 @@ class CartItem extends Component {
 
     let newCart = cart.slice();
     newCart.splice(index, 1);
-    axios.delete(`http://localhost:5000/cart/${savedUser._id}/?itmId=${this.props.item._id}`)
-      .then(res => {
-        this.props.deleteCartItem(this.props.item, newCart);
-        this.props.getCart(newCart);
-      })
-      .catch(err => console.log(err));
+    this.props.deleteCartItem(this.props.item, newCart);
+    this.props.getCart(newCart);
   }
 
   render() {

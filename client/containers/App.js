@@ -3,11 +3,6 @@ import { connect } from 'react-redux';
 import { Switch, Route, Redirect, useRouterHistory } from 'react-router';
 import { Router } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
-import axios from 'axios';
-import styled from 'styled-components';
-import { injectGlobal } from 'styled-components';
-
-const history = createBrowserHistory();
 
 import Register from './Register';
 import Navbar from '../components/Navbar';
@@ -19,78 +14,32 @@ import Profile from '../components/dashboard/Profile';
 import Cart from '../components/cart/Cart';
 import Checkout from '../components/checkout/Checkout';
 import CheckoutSuccess from '../components/checkout/CheckoutSuccess';
+import CheckoutFail from '../components/checkout/CheckoutFail';
 import Footer from '../Components/Footer';
+import DetailsRoute from './DetailsRoute';
 
 import { logOut, loginSuccess } from '../actions/login';
 import { registerSuccess } from '../actions/register';
-import { updateUser, getUser, updateAddress, changePassword, tokenExpired }  from '../actions/user';
+import { updateUser, getUser, updateAddress, changePassword, tokenExpired, getAddress }  from '../actions/user';
 import { showProducts, switchCategories }  from '../actions/products';
 import { getCart, addItemToCart, deleteCartItem, getQuantity, updateCartItem, clearCart, addToCartError } from '../actions/cart';
 import { buildOrder, getOrders, checkOrderFail, checkOrderSuccess } from '../actions/order';
 
-injectGlobal`
-  body {
-    background: #F5EFED;
-  }
-
-  a {
-    color: black;
-    text-decoration: none;
-  }
-`;
-
-const Container = styled.div`
-  margin: 0 3em;
-  margin-top: 5em;
-` 
-
-import '../App.scss';
+import { globalStyles, Container } from './styled';
 
 const userLoggedIn = localStorage.getItem('token');
 const savedUser = JSON.parse(localStorage.getItem('user'));
+const history = createBrowserHistory();
 
 class App extends Component {
-  constructor() {
-    super();
-  }
-
   componentDidMount() {
-    // this.props.getCart();
     this.props.getProducts();
     if (userLoggedIn) {
       this.props.loginSuccess(true);
-      this.props.getUser(savedUser);
     }
   }
 
   render() {
-    let ProductDetailsRoute;
-    ProductDetailsRoute = this.props.productsList.map((el) => {
-      return(
-        el.products.map((product) => {
-        return(
-          <Route 
-            exact path={`/product/${product._id}`} 
-            render={() => 
-            <ProductDetails 
-              key={product._id} 
-              getQuantity={this.props.getQuantity} 
-              product={product} 
-              quantity={this.props.quantity} 
-              getCart={this.props.getCart} 
-              cart={this.props.cart} 
-              addItemToCart={this.props.addItemToCart} 
-              user={this.props.user} 
-              updateCartItem={this.props.updateCartItem} 
-              isLoggedIn={this.props.isLoggedIn} 
-              addToCartError={this.props.addToCartError}
-              error={this.props.error}
-            />} 
-          />
-        )
-      })
-      )
-    })
     return(
       <Router history={history}>
         <Container>
@@ -98,6 +47,7 @@ class App extends Component {
             isLoggedIn={this.props.isLoggedIn} 
             logOut={this.props.logOut} 
             cart={this.props.cart}
+            getProducts={this.props.getProducts}
             /> 
           <Switch>
             <Route 
@@ -110,13 +60,9 @@ class App extends Component {
                 category={this.props.category}
                 />} 
               />
-            <Route 
-              exact path='/login' 
-              render={() => 
-              <Login 
-                getUser={this.props.getUser} 
-                loginSuccess={this.props.loginSuccess}/>} 
-              />
+            <Route exact path='/login' render={() => 
+              <Login loginSuccess={this.props.loginSuccess}/>} 
+            />
             <Route 
               path='/dashboard' 
               render={() => (!this.props.loginSuccess ? (
@@ -125,13 +71,16 @@ class App extends Component {
                 loginSuccess={this.props.loginSuccess} 
                 logOut={this.props.logOut} 
                 getUser={this.props.getUser} 
-                updateUser={this.props.updateUser} 
                 user={this.props.user} 
                 changeAddress={this.props.changeAddress} 
                 changePassword={this.props.changePassword}
                 getOrders={this.props.getOrders}
-                orders={this.props.orders}/>))} 
-               />
+                updateUser={this.props.updateUser} 
+                orders={this.props.orders}
+                getAddress={this.props.getAddress}
+                address={this.props.address}
+                />))} 
+            />
             <Route 
               path='/cart' 
               render={() => (!this.props.loginSuccess ? ( <Redirect to='/login' /> ) : (
@@ -150,29 +99,43 @@ class App extends Component {
                 isRegistered={this.props.isRegistered}
                 />}
               />
-            {ProductDetailsRoute}
             <Route 
-              exact path='/dashboard/profile' 
-              render={() => <Profile />} />
-              <Route 
-                exact path='/checkout'
-                render={() => 
-                <Checkout 
-                  user={this.props.user} 
-                  getCart={this.props.getCart} 
-                  cart={this.props.cart} 
-                  total={this.props.total} 
-                  buildOrder={this.props.buildOrder} 
-                  description={'payment'} 
-                  amount={this.props.total} 
-                  orderSuccess={this.props.orderSuccess}/>} 
-                />
-              <Route 
-                exact path='/checkout-success'
-                render={() => (this.props.orderSuccess ? 
-                <CheckoutSuccess 
-                  clearCart={this.props.clearCart} />: <Login />)} 
-                />
+              exact path='/checkout'
+              render={() => 
+              <Checkout 
+                user={this.props.user} 
+                getCart={this.props.getCart} 
+                cart={this.props.cart} 
+                total={this.props.total} 
+                buildOrder={this.props.buildOrder} 
+                description={'payment'} 
+                amount={this.props.total} 
+                orderSuccess={this.props.orderSuccess}
+                orderFail={this.props.orderFail}/>} 
+              />
+            <Route 
+              exact path='/checkout-success'
+              render={() => (this.props.orderSuccess ? 
+              <CheckoutSuccess 
+                clearCart={this.props.clearCart} />: <Login />)} 
+              />
+            <Route 
+              exact path='/checkout-fail'
+              render={() => <CheckoutFail />} 
+            />
+            <DetailsRoute 
+              productsList={this.props.productsList} 
+              getQuantity={this.props.getQuantity}  
+              quantity={this.props.quantity} 
+              getCart={this.props.getCart} 
+              cart={this.props.cart} 
+              addItemToCart={this.props.addItemToCart} 
+              user={this.props.user} 
+              updateCartItem={this.props.updateCartItem} 
+              isLoggedIn={this.props.isLoggedIn} 
+              addToCartError={this.props.addToCartError}
+              error={this.props.error}
+            />
           </Switch>
           <Footer />
         </Container>
@@ -193,124 +156,40 @@ const mapStateToProps = (state) => {
     total: state.cartReducer.total,
     orderSuccess: state.orderReducer.orderSuccess,
     orders: state.orderReducer.orders,
-    error: state.cartReducer.error
+    error: state.cartReducer.error,
+    address: state.userReducer.address
   };
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    logOut: (isLoggedIn, user) => {
-      dispatch(logOut(false, user))
-    },
+const mapDispatchToProps = (dispatch) => ({
 
-    loginSuccess: (isLoggedIn) => {
-        dispatch(loginSuccess(true))
-    },
+    registerSuccess: (isRegistered) => dispatch(registerSuccess(true)),
+    logOut: (isLoggedIn, user) => dispatch(logOut(false, user)),
+    loginSuccess: (isLoggedIn) => dispatch(loginSuccess(true)),
+    getUser: (user) => dispatch(getUser()),
 
-    updateUser: (user) => {
-      dispatch(updateUser(user))
-    },
+    updateUser: (user) => dispatch(updateUser(user)),
+    changePasword: (password) => dispatch(changePassword(password)),
+    getAddress: (address) => dispatch(getAddress(address)),
+    changeAddress: (address) => dispatch(updateAddress(address)),
 
-    changePasword: (password) => {
-      dispatch(changePassword(password))
-    },
+    getProducts: () => dispatch(showProducts()),
+    switchCategories: (category) => dispatch(switchCategories(category)),
 
-    getUser: (user) => {
-      dispatch(getUser(user))
-    },
+    getCart: (cart, total) => dispatch(getCart()),
+    clearCart: (cart) => dispatch(clearCart()),
 
-    registerSuccess: (isRegistered) => {
-      dispatch(registerSuccess(true))
-    },
-    
-    getProducts: () => {
-      axios.get('http://localhost:5000/products/list')
-        .then((res) => {       
-          dispatch(showProducts(res.data))      
-        })
-        .catch(err => console.log(err))
-    },
+    addItemToCart: (cartItem, cart, price) => dispatch(addItemToCart(cartItem, cart, price)),
+    updateCartItem: (quantity, price) => dispatch(updateCartItem(quantity, price)),
+    deleteCartItem: (cartItem, cart) => dispatch(deleteCartItem(cartItem, cart)),
 
-    switchCategories: (category) => {
-      axios.get(`http://localhost:5000/categories/${category}`)
-      .then(res => {
-        dispatch(switchCategories(category))
-      })
-      .catch(err => console.log(err)) 
-    },
+    getQuantity: (quantity) => dispatch(getQuantity(quantity)),
+    addToCartError: (error) => dispatch(addToCartError(error)),
 
-    getCart: (cart, total) => {
-      axios.get(`http://localhost:5000/cart/${savedUser._id}`)
-        .then(res => {
-          total = res.data.cart.reduce((prev, cur) => {
-            let result = Number(cur.price) + Number(prev);
-            return result.toFixed(2);
-          }, 0);
-          dispatch(getCart(res.data.cart, total));
-        })
-        .catch(err => console.log(err))
-    }, 
-
-    addItemToCart: (cartItem, price) => {
-      dispatch(addItemToCart(cartItem, price))
-    },
-
-    deleteCartItem: (cartItem, cart) => {
-      dispatch(deleteCartItem(cartItem, cart))
-    },
-
-    getQuantity: (quantity) => {
-      dispatch(getQuantity(quantity))
-    },
-
-    updateCartItem: (quantity, price) => {
-      dispatch(updateCartItem(quantity, price))
-    },
-
-    buildOrder: (cart, total, order, date) => {
-      axios({
-        method: 'post',
-        url: `http://localhost:5000/order/${savedUser._id}`,
-        data: {order: cart, total: total}
-      })
-      .then(res => {
-        dispatch(buildOrder(cart, total, res.data.cart, res.data.order.updatedAt))
-      })
-      .catch(err => console.log(err))
-    },
-
-    orderFail: (fail) => {
-      dispatch(checkOrderFail(fail))
-    },
-
-    orderSuccess: (success) => {
-      dispatch(checkOrderSuccess(true))
-    },
-
-    getOrders: (orders) => {
-      axios.get(`http://localhost:5000/order/${savedUser._id}`)
-        .then(res => {
-          dispatch(getOrders(res.data.order))
-        })
-        .catch(err => console.log(err))
-    },
-
-    clearCart: (cart) => {
-      axios.delete(`http://localhost:5000/cart/empty/${savedUser._id}`)
-        .then(res => {
-          dispatch(clearCart(cart))
-        })
-        .catch(err => console.log(res));
-    },
-
-    addToCartError: (error) => {
-      dispatch(addToCartError(error))
-    },
-
-    changeAddress: (address) => {
-      dispatch(updateAddress(address));
-    }
-  }
-};
+    getOrders: (orders) => dispatch(getOrders(orders)),
+    buildOrder: (cart, total, order, date) => dispatch(buildOrder(cart, total, order, date)),
+    orderFail: (fail) => dispatch(checkOrderFail(fail)),
+    orderSuccess: (success) => dispatch(checkOrderSuccess(success))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

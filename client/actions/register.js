@@ -1,15 +1,11 @@
 import { REGISTER_SUCCESS, REGISTER_FAIL } from './constants';
 
-export function registerSuccess(reg) {
-  return {
+export const registerSuccess = isRegistered => ({
     type: REGISTER_SUCCESS, 
-    payload: reg
-  };
-}
+    payload: isRegistered
+});
 
-export function registerFail(reg) {
-  return {
+export const registerFail = isRegistered => ({
     type: REGISTER_FAIL,
-    payload: reg
-  };
-}
+    payload: isRegistered
+});

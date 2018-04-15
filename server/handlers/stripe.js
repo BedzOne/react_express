@@ -1,7 +1,6 @@
 const stripe = require('../config').stripe;
   
 exports.chargeCard = (req, res) => {
-  res.json(req.body);
   stripe.customers.list({
     limit: 100,
     email: req.body.stripeToken.email
@@ -19,9 +18,11 @@ exports.chargeCard = (req, res) => {
               currency: req.body.currency,
               customer: customer.id
             })
-            .then(charge => console.log('charge'))
+            .then(charge => console.log('charged'))
+            // .catch(err => res.sendStatus(404))
         })
         console.log('isMatch')
+        res.sendStatus(200)
         return true;
       }
       })
@@ -42,9 +43,10 @@ exports.chargeCard = (req, res) => {
             currency: req.body.currency,
             customer: customer.id
           })
-        .then(charge => console.log('charged'))
+          .then(charge => console.log('charge'))
         })
         .catch(err => res.sendStatus(404));
     }
+    res.sendStatus(200);
   })
 }

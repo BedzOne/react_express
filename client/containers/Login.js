@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { withRouter } from "react-router-dom";
+import { connect } from 'react-redux';
+import axios from 'axios';
+
+import { logUserIn, loginFail, createToken } from '../actions/login';
 
 class Login extends Component {
   constructor(props) {
@@ -12,10 +15,10 @@ class Login extends Component {
     };
 
     this.handleOnChange = this.handleOnChange.bind(this);
-    this.onLogin = this.onLogin.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
-  onLogin(e) {
+  handleLogin(e){
     e.preventDefault();
     axios({
       method: 'POST',
@@ -23,13 +26,14 @@ class Login extends Component {
       data: this.state,
     })
     .then(res => {
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.users[0]));
-      const loggedUser = localStorage.getItem('user');
-      const userState = JSON.parse(loggedUser);
-      this.props.loginSuccess(true);
-      this.props.getUser(userState);
-      this.props.history.push('/home');
+      if (res.status === 200) {
+        this.props.logUserIn(res.data.users[0]);
+        this.props.createToken(res.data.token);
+        this.props.loginSuccess(true);
+        this.props.history.push('/home');
+      } else {
+        this.props.loginFail(false);
+      }
     })
     .catch(err => console.log(err));
   }
@@ -39,16 +43,14 @@ class Login extends Component {
     const value = e.target.value;
     const name = e.target.name;
 
-    this.setState({
-      [name]: value
-    });
+    this.setState({ [name]: value });
   }
  
   render() {
     return(
       <div>
         <h2>Please Log in</h2>
-        <form onSubmit={this.onLogin}>
+        <form onSubmit={this.handleLogin}>
           <label htmlFor='email'>E-mail</label>
           <input onInput={this.handleOnChange} id='email' name='email' type='email' /> 
 
@@ -62,4 +64,15 @@ class Login extends Component {
   }
 }
 
-export default withRouter(Login);
+const mapStateToProps = state => ({
+  user: state.userReducer.user,
+  token: state.userReducer.token
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  logUserIn: (user) => dispatch(logUserIn(user)),
+  loginFail: () => dispatch(loginFail()),
+  createToken: (token) => dispatch(createToken(token))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));

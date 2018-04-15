@@ -5,6 +5,7 @@ export const REGISTER_FAIL = 'REGISTER_FAIL';
 //login user
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const LOG_IN = 'LOG_IN';
 export const LOG_OUT = 'LOG_OUT';
 
 //user details
@@ -12,8 +13,10 @@ export const GET_USER = 'GET_USER';
 export const DELETE_USER = 'DELETE_USER';
 export const UPDATE_USER = 'UPDATE_USER';
 export const UPDATE_ADDRESS = 'UPDATE_ADDRESS';
+export const CREATE_TOKEN = 'CREATE_TOKEN';
 export const TOKEN_EXPIRED_NOTIFY = 'TOKEN_EXPIRED_NOTIFY';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+export const GET_ADDRESS = 'GET_ADDRESS';
 
 //products
 export const SHOW_PRODUCTS = 'SHOW_PRODUCTS';

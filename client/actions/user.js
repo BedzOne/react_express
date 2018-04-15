@@ -4,48 +4,67 @@ import {
   DELETE_USER, 
   UPDATE_ADDRESS, 
   TOKEN_EXPIRED_NOTIFY,
-  CHANGE_PASSWORD
+  CHANGE_PASSWORD,
+  GET_ADDRESS
 } from './constants';
 
-export function getUser(user) {
-  return {
-    type: GET_USER,
-    payload: user
-  };
-}
+import axios from 'axios';
 
-export function updateUser(user) {
+const savedUser = JSON.parse(localStorage.getItem('user'));
+
+export const getUser = user => dispatch => {
+  axios.get(`http://localhost:5000/user/${savedUser._id}`)
+  .then(res => {
+    dispatch({
+      type: GET_USER,
+      user: res.data
+    })
+  })
+  .catch(err => console.log(err))
+};
+
+export const updateUser = user => {
   return {
     type: UPDATE_USER,
     user: user
   };
-}
+};
 
-export function deleteUser(user) {
+export const deleteUser = user => {
   return {
     type: DELETE_USER,
     payload: user
   };
-}
+};
 
-export function updateAddress(address) {
+export const updateAddress = address => {
   return {
     type: UPDATE_ADDRESS, 
     address
   };
-}
+};
 
-export function changePassword(password) {
+export const changePassword = password => {
   return {
     type: CHANGE_PASSWORD,
     password
   }
+};
+
+
+export const getAddress = address => dispatch => {
+  axios.get(`http://localhost:5000/user/${savedUser._id}`)
+  .then(res => {
+    dispatch({
+      type: GET_ADDRESS,
+      address: res.data.addressDelivery
+    })
+  })
+  .catch(err => console.log(err))
 }
 
-export function tokenExpired(message,token) {
-  return {
+export const tokenExpired = (message,token) => ({
     type: TOKEN_EXPIRED_NOTIFY,
     message,
     token
-  };
-}
+});

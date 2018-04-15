@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const proxy = require('http-proxy-middleware');
 
 const config = require('./config');
 
@@ -22,7 +23,7 @@ app.use((req, res, next) => {
 });
 
 //apply express middleware
-
+// app.use('/', proxy({target: 'http://localhost:5000', changeOrigin: true}));
 app.use(bodyParser.json());
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: true}));

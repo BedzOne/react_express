@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { withRouter } from "react-router-dom";
 
+import { Form } from './styled';
+
 let userLoggedIn = localStorage.getItem('token');
 const savedUser = JSON.parse(localStorage.getItem('user'));
-console.log(savedUser)
 
 class Settings extends Component {
   constructor(props) {
@@ -14,22 +15,25 @@ class Settings extends Component {
       firstName: this.props.user.firstName,
       lastName: this.props.user.lastName,
       email: this.props.user.email,
-      phone: '',
+      phone: this.props.user.phone,
       password: '',
       confirmPassword: '',
       newPassword: '',
       addressBilling: this.props.user.addressBilling,
-      addressDelivery: this.props.user.addressDelivery
+        address: '',
+        city: '',
+        countyState: '',
+        postCode: ''
     };
 
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
+    this.handleAddressSubmit = this.handleAddressSubmit.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getUser();
-    console.log(this.props.user)
   }
 
   handleSubmit(e) {
@@ -38,21 +42,27 @@ class Settings extends Component {
     if (userLoggedIn) {
       axios({
         method: 'PUT',
-        url: `http://localhost:5000/user/${savedUser._id}`,
+        url: `http://localhost:5000/user/${this.props.user._id}`,
         headers: {Authorization: `Bearer ${userLoggedIn}`},
-        data: this.state
+        data: {
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+          email: this.state.email,
+          phone: this.state.phone,
+          password: this.state.password
+        }
       })
       .then((res) => {
         localStorage.setItem('user', JSON.stringify(res.data));
         const updatedUser = localStorage.getItem('user');
         const updatedUserState = JSON.parse(updatedUser);
         this.props.updateUser(updatedUserState);
-        this.props.logOut();
-        localStorage.clear();
-        this.props.history.push('/login');
       })
       .catch(err => console.log(err))
     }
+    this.props.logOut();
+    localStorage.clear();
+    this.props.history.push('/login');
   }
 
   handlePasswordSubmit(e) {
@@ -68,13 +78,38 @@ class Settings extends Component {
           confirmPassword: this.state.confirmPassword
         }
       })
-      .then(res => console.log(res))
+      .then(res => {
+        this.props.logOut();
+        localStorage.clear();
+        this.props.history.push('/login');
+      })
       .catch(err => console.log(err))
     }
   }
 
-  handleOnChange(e) {
+  handleAddressSubmit(e) {
     e.preventDefault();
+    axios({
+      method: 'PUT',
+      url: `http://localhost:5000/user/address/${savedUser._id}`,
+      headers: {Authorization: `Bearer ${userLoggedIn}`},
+      data: {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        address: this.state.address,
+        city: this.state.city,
+        countyState: this.state.countyState,
+        postCode: this.state.postCode
+      }
+    })
+    .then(res => {
+      console.log(res)
+    })
+    .catch(err => console.log(err))
+  }
+
+  handleOnChange(e) {
+    // e.preventDefault();
     const target = e.target;
     const value = target.value;
     const name = target.name;
@@ -85,12 +120,12 @@ class Settings extends Component {
   }
 
   render() {
-    // let user = this.props.currentUser;
     return(
       <div>
         <div>Settings</div>
+
         <h2>Change Personal Details</h2>
-        <form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit}>
           <label htmlFor='firstName'>First Name</label>
           <input onChange={this.handleOnChange}  value={this.state.firstName} id='firstName' name='firstName' type='text' /> 
 
@@ -110,24 +145,24 @@ class Settings extends Component {
           <input onChange={this.handleOnChange} id='confirmPassword' name='confirmPassword' type='password' required />
 
           <input type='submit' value='Make Changes' />
-        </form>
+        </Form>
 
         <h2>Change Password</h2>
-        <form onSubmit={this.handlePasswordSubmit}>
+        <Form onSubmit={this.handlePasswordSubmit}>
           <label htmlFor='password'>Existing Password</label>
-          <input onChange={this.handleOnChange} value={this.state.password} id='password' name='password' type='password' required/> 
+          <input onChange={this.handleOnChange}  id='password' name='password' type='password' required/> 
 
           <label htmlFor='newPassword'>New Password</label>
-          <input onChange={this.handleOnChange} value={this.state.newPassword} id='newPassword' name='newPassword' type='password' required/> 
+          <input onChange={this.handleOnChange}  id='newPassword' name='newPassword' type='password' required/> 
 
           <label htmlFor='confirmPassword'>Confirm Password</label>
-          <input onChange={this.handleOnChange} value={this.state.confirmPassword} id='confirmPassword' name='confirmPassword' type='password' required />
+          <input onChange={this.handleOnChange}  id='confirmPassword' name='confirmPassword' type='password' required />
 
           <input type='submit' value='Change Password' />
-        </form>
+        </Form>
 
         <h2>Add/Change Address</h2>
-        <form onSubmit={this.handleAddressSubmit}>
+        <Form onSubmit={this.handleAddressSubmit}>
           <label htmlFor='firstName'>First Name</label>
           <input onChange={this.handleOnChange}  value={this.state.firstName} id='firstName' name='firstName' type='text' /> 
 
@@ -136,20 +171,19 @@ class Settings extends Component {
 
           <label htmlFor='address'>Address</label>
           <input onChange={this.handleOnChange}  value={this.state.address} id='address' name='address' type='text' />  
-          <input onChange={this.handleOnChange}  value={this.state.address} id='address' name='address' type='text' />  
+          {/* <input onChange={this.handleOnChange}  value={this.state.address} id='address' name='address' type='text' />   */}
 
           <label htmlFor='city'>City</label>
-          <input onChange={this.handleOnChange}  id='city' name='city' type='text' required/> 
+          <input onChange={this.handleOnChange}  value={this.state.city} id='city' name='city' type='text' required/> 
 
-          <label htmlFor='county'>County/State</label>
-          <input onChange={this.handleOnChange}  id='county' name='county' type='text' required/> 
+          <label htmlFor='countyState'>County/State</label>
+          <input onChange={this.handleOnChange}  value={this.state.countyState} id='countyState' name='countyState' type='text' required/> 
 
-          <label htmlFor='post-code'>Post Code</label>
-          <input onChange={this.handleOnChange}  id='post-code' name='post-code' type='text' required/> 
-
-
+          <label htmlFor='postCode'>Post Code</label>
+          <input onChange={this.handleOnChange}  value={this.state.postCode} id='postCode' name='postCode' type='text' required/> 
+          
           <input type='submit' value='Add/Change Address' />
-        </form>
+        </Form>
       </div>
     )
   }

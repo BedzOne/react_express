@@ -17,9 +17,9 @@ exports.registerUser = (req, res) => {
           }
           user.save(function (err, user) {
             if (err) return (err);
+            res.status(200).json(user)
           });
-          console.log('user saved');
-          res.sendStatus(200); 
+          console.log('user saved'); 
         } else {
           res.status(404).json('user exists');
         }      
@@ -40,17 +40,29 @@ exports.getUsers = (req, res) => {
 };
 
 exports.updateUser = (req, res) => {
-  let newUser = req.body;
+  let newUser = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    phone: req.body.phone,
+  }
 
   User.model
     .findByIdAndUpdate(req.params.userId, newUser, {new:true})
     .exec()
     .then(user => {
+      console.log(user)
       bcrypt
       .compare(req.body.password, user.password)
-      user.save(function (err, user) {
-        if (err) return (err);
-      });
+      .then(result => {
+        if (result) {
+          user.save(function (err, user) {
+            if (err) return (err);
+          });
+        } else {
+          res.status(404).json('wrong password');
+        }
+      })
     })
     .catch(err => res.sendStatus(404));
 };
@@ -76,6 +88,7 @@ exports.loginUser = (req, res) => {
     .find({email: user.email})
     .exec()
     .then(users => {
+      console.log(users)
       if (!users.length) { 
         res.status(401).json({
           message: "Auth failed - user does not exist"
@@ -103,8 +116,7 @@ exports.loginUser = (req, res) => {
     });
 };
 
-exports.getSingleUser = (User) => {
-  return function(req, res) {
+exports.getSingleUser = (req, res) => {
     User.model  
       .findById(req.params.userId)
       .exec()
@@ -112,7 +124,6 @@ exports.getSingleUser = (User) => {
         res.json(user);
       })
       .catch(err => res.sendStatus(404));
-    };
 };
 
 exports.changeUserPassword = (req, res) => {
@@ -134,3 +145,30 @@ exports.changeUserPassword = (req, res) => {
     })
     .catch(err => res.sendStatus(404))
 };
+
+exports.changeAddress = (req, res) => {
+  let addressDelivery = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    company: req.body.company,
+    address: req.body.address,
+    city: req.body.city,
+    postCode: req.body.postCode,
+    countyState: req.body.countyState,
+    country: req.body.country,
+  };
+
+  User.model  
+    .findById(req.params.userId)
+    .exec()
+    .then(user => {
+      res.json(user);
+      user.addressDelivery.push(addressDelivery);
+
+      user.save(function(err) {
+        if (err) console.log(err)
+      })
+      
+    })
+    .catch(err => res.sendStatus(404))
+}

@@ -1,11 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 
-const Nav = styled.nav`
-  height: 100%;
-  width: 20%;
-`;
+import { Nav } from './styled';
 
 const SideBar = () => {
   return(

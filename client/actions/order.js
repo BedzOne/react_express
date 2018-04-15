@@ -5,33 +5,44 @@ import {
   ORDER_FAIL  
 } from './constants';
 
-export function buildOrder(cart, total, order, date) {
-  return {
-    type: BUILD_ORDER,
-    cart,
-    total,
-    order,
-    date
-  };
+import axios from 'axios';
+const savedUser = JSON.parse(localStorage.getItem('user'));
+
+export const buildOrder = (cart, total, order, date) => dispatch => {
+  axios({
+    method: 'post',
+    url: `http://localhost:5000/order/${savedUser._id}`,
+    data: {order: cart, total: total}
+  })
+  .then(res => {
+    dispatch({
+      type: BUILD_ORDER,
+      cart,
+      total,
+      order: res.data.cart,
+      date: res.data.order.updatedAt
+    })
+  })
+  .catch(err => console.log(err))
 }
 
-export function getOrders(orders) {
-  return {
-    type: GET_ORDERS,
-    orders
-  }
+export const getOrders = orders => dispatch => {
+  axios.get(`http://localhost:5000/order/${savedUser._id}`)
+  .then(res => {
+    dispatch({
+      type: GET_ORDERS,
+      orders: res.data.order
+    })
+  })
+  .catch(err => console.log(err))
 }
 
-export function checkOrderSuccess(success) {
-  return {
+export const checkOrderSuccess = success => ({
     type: ORDER_SUCCESS,
-    success
-  }
-}
+    succes
+});
 
-export function checkOrderFail(fail) {
-  return {
+export const checkOrderFail = fail => ({
     type: ORDER_FAIL,
     fail
-  }
-}
+});

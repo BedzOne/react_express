@@ -4,9 +4,9 @@ import styled from 'styled-components';
 
 const Footer = () => {
   return(
-  <footer>
-    This is a footer!!
-  </footer>
+    <footer>
+      This is a footer!!
+    </footer>
   )
 }
 

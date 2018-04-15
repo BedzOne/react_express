@@ -17,7 +17,8 @@ module.exports = {
     contentBase: './dist',
     port: 3001,
     hot: true,
-    historyApiFallback: true,
+    historyApiFallback: true, 
+    proxy: { "/api/**": { target: 'http://localhost:5000', secure: false }  }
   },
   devtool: 'eval-source-map',
   module: {

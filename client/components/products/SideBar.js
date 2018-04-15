@@ -1,22 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import axios from 'axios';
 
 import Category from './Category';
-
-const Nav = styled.nav`
-  height: 100%;
-  width: 20%;
-`;
+import { Nav } from './styled';
 
 class SideBar extends Component {
   constructor(props) {
     super(props);
-  }
-
-  componentWillMount() {
-    this.props.getProducts()
   }
 
   render() {

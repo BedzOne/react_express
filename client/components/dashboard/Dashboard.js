@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router';
-import styled from 'styled-components';
 
 import SideBar from './SideBar';
 import Profile from './Profile';
 import Settings from './Settings';
 import Orders from './Orders';
+import OrderDetailsRoute from './OrderDetailsRoute';
 
-const Container = styled.div`
-  display: flex;
-`;
+import  { Container }  from './styled';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -25,6 +23,8 @@ class Dashboard extends Component {
           render={() => 
           <Profile 
             getUser={this.props.getUser} 
+            getAddress={this.props.getAddress}
+            address={this.props.address}
             user={this.props.user}/>} 
           />
         <Route 
@@ -40,10 +40,11 @@ class Dashboard extends Component {
         <Route 
           exact path='/dashboard/myorders' 
           render={() => 
-        <Orders 
-          orders={this.props.orders} 
-          getOrders={this.props.getOrders}/>} 
-        />
+          <Orders 
+            orders={this.props.orders} 
+            getOrders={this.props.getOrders}/>} 
+        />    
+        <OrderDetailsRoute orders={this.props.orders} />
       </Container>
     )
   }

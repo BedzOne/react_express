@@ -1,15 +1,24 @@
 import { SHOW_PRODUCTS, SWITCH_CATEGORIES } from './constants';
+import axios from 'axios';
 
-export function showProducts(products) {
-  return {
-    type: SHOW_PRODUCTS,
-    products
-  };
+export const showProducts = () => dispatch =>  {
+  axios.get('http://localhost:5000/products/list')
+    .then(res =>   
+      dispatch({
+        type: SHOW_PRODUCTS,
+        products: res.data
+      }) 
+    )
+    .catch(err => console.log(err))
 }
 
-export function switchCategories(category) {
-  return {
-    type: SWITCH_CATEGORIES,
-    category
-  };
+export const switchCategories = (category) => dispatch => {
+  axios.get(`http://localhost:5000/categories/${category}`)
+    .then(res => {
+      dispatch({
+        type: SWITCH_CATEGORIES,
+        category
+      })
+    })
+    .catch(err => console.log(err)) 
 }

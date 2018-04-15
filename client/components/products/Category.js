@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
 class Category extends Component {
   constructor(props) {
@@ -8,7 +7,6 @@ class Category extends Component {
     this.switch = this.switch.bind(this);
   }
 
-  
   switch() {
     this.props.switchCategories(this.props.product._id)
   }

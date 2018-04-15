@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
 class AddToCartButton extends Component {
   constructor(props) {
@@ -18,17 +17,9 @@ class AddToCartButton extends Component {
     cartItem.price = price;
     cartItem.quantity = this.props.quantity;
     if (this.props.isLoggedIn) {
-      axios({
-        method: 'post',
-        url: `http://localhost:5000/cart/${this.props.user._id}`,
-        data: cartItem
-      })
-      .then(res => {
-        this.props.addItemToCart(cartItem, res.data.cart, price)
-      })
-      .catch(err => console.log(err));
+      this.props.addItemToCart(cartItem, this.props.cart, price)
     } else {
-      console.log('not logged ins')
+      console.log('not logged in')
       this.props.addToCartError(true)
     }
   }

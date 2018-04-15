@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-const Span = styled.span`
-  display: inline-block;
-  width: 200px;
-  margin: 0 5px;
-`
+import { Span } from './styled';
 
 class Orders extends Component {
   constructor(props) {
@@ -13,7 +9,7 @@ class Orders extends Component {
   }
 
   componentDidMount() {
-    this.props.getOrders()
+    this.props.getOrders();
   }
 
   render() {
@@ -26,8 +22,7 @@ class Orders extends Component {
               <Span>Ordered</Span>
               <Span><span>£</span><span>{order.total}</span></Span>
               <Span>
-                <button>Details</button>
-                <button>Return</button>
+                <Link to='/dashboard/myorders/details'>Details</Link>
               </Span>
             </li>
           )
@@ -38,15 +33,17 @@ class Orders extends Component {
     return(
       <div>
         <h2>My Orders</h2>
-        <ul>
-          <li>
-            <Span>Order date</Span>
-            <Span>Order Status</Span>
-            <Span>Total</Span>
-            <Span>Details</Span>
-          </li>
-          {orders}
-        </ul>
+        {this.props.orders.length > 0 ? 
+          <ul>
+            <li>
+              <Span>Order date</Span>
+              <Span>Order Status</Span>
+              <Span>Total</Span>
+              <Span>Details</Span>
+            </li>
+            {orders}
+          </ul>
+        : <span>You haven't bought anything yet</span>}
       </div>
     )
   }
