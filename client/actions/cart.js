@@ -48,14 +48,14 @@ export const addItemToCart = (item, price) => dispatch => {
 
 export const deleteCartItem = (item, cart) => dispatch => {
   axios.delete(`http://localhost:5000/cart/${savedUser._id}/?itmId=${item._id}`)
-      .then(res => {
-        dispatch({
-          type: DELETE_CART_ITEM,
-          item,
-          cart
-        })
+    .then(res => {
+      dispatch({
+        type: DELETE_CART_ITEM,
+        item,
+        cart
       })
-      .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
 }
 
 export const getQuantity = quantity => ({
